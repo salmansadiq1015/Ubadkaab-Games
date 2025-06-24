@@ -1,6 +1,7 @@
 "use client"
 
-import { createContext, useContext, useState, type ReactNode } from "react"
+import type React from "react"
+import { createContext, useContext, useState, useEffect } from "react"
 
 type Language = "en" | "ar" | "so"
 
@@ -8,6 +9,7 @@ interface LanguageContextType {
   language: Language
   setLanguage: (lang: Language) => void
   t: (key: string) => string
+  isRTL: boolean
 }
 
 const translations = {
@@ -18,61 +20,50 @@ const translations = {
     profile: "Profile",
     settings: "Settings",
 
-    // Home page
-    welcome: "Welcome to Learning Games!",
-    subtitle: "Fun educational games for children",
-    totalScore: "Total Score",
-    gamesPlayed: "Games Played",
-    currentLevel: "Current Level",
-    bestScore: "Best Score",
-    enter: "Enter",
-
-    // Games
-    alphabetGame: "Alphabet Game",
-    mathGame: "Math Game",
-    scienceGame: "Science Game",
-    puzzleGame: "Puzzle Game",
-    quizGame: "Quiz Game",
-    memoryGame: "Memory Game",
-    colorsGame: "Colors Game",
-    shapesGame: "Shapes Game",
-    animalsGame: "Animals Game",
-    numbersGame: "Numbers Game",
-    musicGame: "Music Game",
-    drawingGame: "Drawing Game",
-
-    // Game descriptions
-    alphabetDesc: "Learn letters and sounds",
-    mathDesc: "Practice numbers and calculations",
-    scienceDesc: "Discover amazing facts",
-    puzzleDesc: "Solve fun puzzles",
-    quizDesc: "Test your knowledge",
-    memoryDesc: "Improve your memory",
-    colorsDesc: "Learn about colors",
-    shapesDesc: "Identify different shapes",
-    animalsDesc: "Meet amazing animals",
-    numbersDesc: "Count and learn numbers",
-    musicDesc: "Create beautiful music",
-    drawingDesc: "Express your creativity",
+    // Game Categories
+    alphabets: "Alphabets",
+    drawing: "Drawing",
+    quizzes: "Quizzes",
+    math: "Math Games",
+    science: "Science",
+    puzzles: "Puzzles",
+    music: "Music",
+    quran: "Quran Learning",
 
     // Common
     play: "Play",
     start: "Start",
     next: "Next",
-    submit: "Submit",
-    correct: "Correct!",
-    incorrect: "Try again!",
+    back: "Back",
     score: "Score",
     level: "Level",
-    back: "Back",
     restart: "Restart",
+    correct: "Correct!",
+    tryAgain: "Try Again",
     wellDone: "Well Done!",
-    gameComplete: "Game Complete!",
-    highScore: "High Score",
-    currentScore: "Current Score",
-    playNow: "Play Now",
-    achievements: "Achievements",
-    statistics: "Statistics",
+
+    // Alphabets
+    clickLetter: "Click on a letter to hear its sound!",
+
+    // Math
+    addition: "Addition",
+    subtraction: "Subtraction",
+    multiplication: "Multiplication",
+
+    // Drawing
+    colors: "Colors",
+    brushSize: "Brush Size",
+    clear: "Clear",
+
+    // Quran
+    surah: "Surah",
+    verse: "Verse",
+    listen: "Listen",
+
+    // Profile
+    totalScore: "Total Score",
+    gamesPlayed: "Games Played",
+    favoriteGame: "Favorite Game",
   },
   ar: {
     // Navigation
@@ -81,137 +72,133 @@ const translations = {
     profile: "الملف الشخصي",
     settings: "الإعدادات",
 
-    // Home page
-    welcome: "مرحباً بك في ألعاب التعلم!",
-    subtitle: "ألعاب تعليمية ممتعة للأطفال",
-    totalScore: "النقاط الإجمالية",
-    gamesPlayed: "الألعاب المُلعبة",
-    currentLevel: "المستوى الحالي",
-    bestScore: "أفضل نتيجة",
-    enter: "دخول",
-
-    // Games
-    alphabetGame: "لعبة الحروف",
-    mathGame: "لعبة الرياضيات",
-    scienceGame: "لعبة العلوم",
-    puzzleGame: "لعبة الألغاز",
-    quizGame: "لعبة الأسئلة",
-    memoryGame: "لعبة الذاكرة",
-    colorsGame: "لعبة الألوان",
-    shapesGame: "لعبة الأشكال",
-    animalsGame: "لعبة الحيوانات",
-    numbersGame: "لعبة الأرقام",
-    musicGame: "لعبة الموسيقى",
-    drawingGame: "لعبة الرسم",
-
-    // Game descriptions
-    alphabetDesc: "تعلم الحروف والأصوات",
-    mathDesc: "تدرب على الأرقام والحسابات",
-    scienceDesc: "اكتشف حقائق مذهلة",
-    puzzleDesc: "حل الألغاز الممتعة",
-    quizDesc: "اختبر معلوماتك",
-    memoryDesc: "حسن ذاكرتك",
-    colorsDesc: "تعلم عن الألوان",
-    shapesDesc: "تعرف على الأشكال المختلفة",
-    animalsDesc: "تعرف على الحيوانات الرائعة",
-    numbersDesc: "عد وتعلم الأرقام",
-    musicDesc: "أنشئ موسيقى جميلة",
-    drawingDesc: "عبر عن إبداعك",
+    // Game Categories
+    alphabets: "الحروف الأبجدية",
+    drawing: "الرسم",
+    quizzes: "الاختبارات",
+    math: "ألعاب الرياضيات",
+    science: "العلوم",
+    puzzles: "الألغاز",
+    music: "الموسيقى",
+    quran: "تعلم القرآن",
 
     // Common
     play: "العب",
     start: "ابدأ",
     next: "التالي",
-    submit: "إرسال",
-    correct: "صحيح!",
-    incorrect: "حاول مرة أخرى!",
+    back: "رجوع",
     score: "النقاط",
     level: "المستوى",
-    back: "رجوع",
     restart: "إعادة البدء",
+    correct: "صحيح!",
+    tryAgain: "حاول مرة أخرى",
     wellDone: "أحسنت!",
-    gameComplete: "اللعبة مكتملة!",
-    highScore: "أعلى نتيجة",
-    currentScore: "النتيجة الحالية",
-    playNow: "العب الآن",
-    achievements: "الإنجازات",
-    statistics: "الإحصائيات",
+
+    // Alphabets
+    clickLetter: "انقر على حرف لسماع صوته!",
+
+    // Math
+    addition: "الجمع",
+    subtraction: "الطرح",
+    multiplication: "الضرب",
+
+    // Drawing
+    colors: "الألوان",
+    brushSize: "حجم الفرشاة",
+    clear: "مسح",
+
+    // Quran
+    surah: "سورة",
+    verse: "آية",
+    listen: "استمع",
+
+    // Profile
+    totalScore: "مجموع النقاط",
+    gamesPlayed: "الألعاب المُلعبة",
+    favoriteGame: "اللعبة المفضلة",
   },
   so: {
     // Navigation
     home: "Guriga",
     games: "Ciyaaraha",
-    profile: "Xogta Shakhsi",
+    profile: "Xogta Shakhsiga",
     settings: "Dejinta",
 
-    // Home page
-    welcome: "Ku soo dhawoow Ciyaaraha Waxbarashada!",
-    subtitle: "Ciyaaro waxbarasho oo xiiso leh carruurta",
-    totalScore: "Dhibcaha Guud",
-    gamesPlayed: "Ciyaaraha la Ciyaaray",
-    currentLevel: "Heerka Hadda",
-    bestScore: "Natiijooyinka Ugu Fiican",
-    enter: "Gal",
-
-    // Games
-    alphabetGame: "Ciyaarta Xarfaha",
-    mathGame: "Ciyaarta Xisaabta",
-    scienceGame: "Ciyaarta Sayniska",
-    puzzleGame: "Ciyaarta Halxidhaale",
-    quizGame: "Ciyaarta Su'aalaha",
-    memoryGame: "Ciyaarta Xusuusta",
-    colorsGame: "Ciyaarta Midabada",
-    shapesGame: "Ciyaarta Qaababka",
-    animalsGame: "Ciyaarta Xayawaanka",
-    numbersGame: "Ciyaarta Tirooyinka",
-    musicGame: "Ciyaarta Muusikada",
-    drawingGame: "Ciyaarta Sawirka",
-
-    // Game descriptions
-    alphabetDesc: "Baro xarfaha iyo codadka",
-    mathDesc: "Ku celceli tirooyinka iyo xisaabinta",
-    scienceDesc: "Ogaado xaqiiqooyin cajiib ah",
-    puzzleDesc: "Xalli halxidhaale xiiso leh",
-    quizDesc: "Imtixaan aqoontaada",
-    memoryDesc: "Hagaaji xusuustaada",
-    colorsDesc: "Ku baro midabada",
-    shapesDesc: "Aqoonso qaababka kala duwan",
-    animalsDesc: "La kulam xayawaanka cajiibka ah",
-    numbersDesc: "Tiri oo baro tirooyinka",
-    musicDesc: "Samee muusiko qurux badan",
-    drawingDesc: "Muuji hal-abuurkaaga",
+    // Game Categories
+    alphabets: "Xarfaha",
+    drawing: "Sawirka",
+    quizzes: "Imtixaannada",
+    math: "Ciyaaraha Xisaabta",
+    science: "Sayniska",
+    puzzles: "Halxiraale",
+    music: "Muusiga",
+    quran: "Barashada Quraanka",
 
     // Common
     play: "Ciyaar",
     start: "Bilow",
     next: "Xiga",
-    submit: "Dir",
-    correct: "Sax!",
-    incorrect: "Mar kale isku day!",
-    score: "Dhibco",
-    level: "Heer",
     back: "Dib u noqo",
+    score: "Dhibcaha",
+    level: "Heerka",
     restart: "Dib u bilow",
+    correct: "Sax!",
+    tryAgain: "Mar kale isku day",
     wellDone: "Si fiican!",
-    gameComplete: "Ciyaartu way dhammaatay!",
-    highScore: "Dhibcaha Ugu Sarreeya",
-    currentScore: "Dhibcaha Hadda",
-    playNow: "Hadda Ciyaar",
-    achievements: "Guulaha",
-    statistics: "Tirakoobka",
+
+    // Alphabets
+    clickLetter: "Riix xaraf si aad u maqasho codkiisa!",
+
+    // Math
+    addition: "Isku darka",
+    subtraction: "Ka goynta",
+    multiplication: "Isku dhufashada",
+
+    // Drawing
+    colors: "Midabada",
+    brushSize: "Cabbirka Brushka",
+    clear: "Nadiifi",
+
+    // Quran
+    surah: "Suurad",
+    verse: "Aayad",
+    listen: "Dhegayso",
+
+    // Profile
+    totalScore: "Wadarta Dhibcaha",
+    gamesPlayed: "Ciyaaraha la ciyaaray",
+    favoriteGame: "Ciyaarta la jecel yahay",
   },
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined)
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
+export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguage] = useState<Language>("en")
 
-  const t = (key: string): string => {
-    return translations[language][key as keyof (typeof translations)["en"]] || key
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem("language") as Language
+    if (savedLanguage && ["en", "ar", "so"].includes(savedLanguage)) {
+      setLanguage(savedLanguage)
+    }
+  }, [])
+
+  const handleSetLanguage = (lang: Language) => {
+    setLanguage(lang)
+    localStorage.setItem("language", lang)
   }
 
-  return <LanguageContext.Provider value={{ language, setLanguage, t }}>{children}</LanguageContext.Provider>
+  const t = (key: string): string => {
+    return translations[language][key as keyof (typeof translations)[typeof language]] || key
+  }
+
+  const isRTL = language === "ar"
+
+  return (
+    <LanguageContext.Provider value={{ language, setLanguage: handleSetLanguage, t, isRTL }}>
+      <div className={isRTL ? "rtl" : "ltr"}>{children}</div>
+    </LanguageContext.Provider>
+  )
 }
 
 export function useLanguage() {
