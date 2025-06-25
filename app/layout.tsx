@@ -8,7 +8,7 @@ import { AudioProvider } from "@/contexts/audio-context";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Kids Learning Platform",
+  title: "Ubadkaab TV Learning Platform",
   description: "Interactive learning games for children",
 };
 

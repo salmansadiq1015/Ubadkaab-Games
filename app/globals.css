@@ -51,6 +51,45 @@
   }
 }
 
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&display=swap");
+
+.font-arabic {
+  font-family: "Noto Sans Arabic", "Arial Unicode MS", sans-serif;
+  font-feature-settings: "liga" 1, "calt" 1;
+}
+
+/* RTL improvements */
+.rtl input {
+  text-align: right;
+}
+
+.rtl .space-x-reverse > * + * {
+  margin-right: 1rem;
+  margin-left: 0;
+}
+
+/* Arabic text styling */
+.rtl .text-right {
+  text-align: right;
+}
+
+.rtl .flex-row-reverse {
+  flex-direction: row-reverse;
+}
+
+/* Improve Arabic letter spacing */
+.font-arabic {
+  letter-spacing: 0.05em;
+  line-height: 1.6;
+}
+
+/* Better Arabic number display */
+.rtl .tabular-nums {
+  font-variant-numeric: tabular-nums;
+  direction: ltr;
+  display: inline-block;
+}
+
 @layer components {
   .game-card {
     @apply bg-white rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95 p-6 cursor-pointer border-4 border-transparent hover:border-yellow-300;

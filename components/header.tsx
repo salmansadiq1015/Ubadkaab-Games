@@ -3,13 +3,13 @@
 import { useLanguage } from "@/contexts/language-context"
 import { useAudio } from "@/contexts/audio-context"
 import { Button } from "@/components/ui/button"
-import { Volume2, VolumeX, Home, User, Settings } from "lucide-react"
+import { Volume2, VolumeX, Home, User, Settings, Loader2 } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 
 export function Header() {
   const { language, setLanguage, t, isRTL } = useLanguage()
-  const { isMuted, toggleMute, playSound, currentVoice, setVoicePreference } = useAudio()
+  const { isMuted, toggleMute, playSound, currentVoice, setVoicePreference, isAudioReady } = useAudio()
   const [showSettings, setShowSettings] = useState(false)
 
   const handleLanguageChange = (lang: "en" | "ar" | "so") => {
@@ -31,6 +31,10 @@ export function Header() {
   const handleSettingsToggle = () => {
     playSound("click")
     setShowSettings(!showSettings)
+  }
+
+  const testAudio = () => {
+    playSound("correct")
   }
 
   return (
@@ -75,12 +79,18 @@ export function Header() {
                 className="bg-white text-gray-700 hover:bg-gray-100 rounded-full p-2"
               >
                 <Settings className="w-5 h-5" />
+                {!isAudioReady && <Loader2 className="w-3 h-3 ml-1 animate-spin" />}
               </Button>
 
               {/* Settings Dropdown */}
               {showSettings && (
                 <div className="absolute right-0 top-12 bg-white rounded-lg shadow-xl border-2 border-gray-200 p-4 z-50 min-w-64">
                   <h3 className="font-bold text-gray-800 mb-3">Audio Settings</h3>
+
+                  {/* Audio Status */}
+                  <div className="mb-4 p-2 bg-gray-50 rounded">
+                    <p className="text-xs text-gray-600">Status: {isAudioReady ? "✅ Ready" : "⏳ Loading..."}</p>
+                  </div>
 
                   {/* Voice Preference */}
                   <div className="mb-4">
@@ -108,6 +118,18 @@ export function Header() {
                   <div className="mb-4">
                     <p className="text-sm text-gray-600 mb-1">Current Voice:</p>
                     <p className="text-xs text-gray-500 truncate">{currentVoice}</p>
+                  </div>
+
+                  {/* Test Audio */}
+                  <div className="mb-4">
+                    <Button
+                      onClick={testAudio}
+                      size="sm"
+                      className="w-full bg-green-500 hover:bg-green-600 text-white"
+                      disabled={!isAudioReady}
+                    >
+                      🔊 Test Audio
+                    </Button>
                   </div>
 
                   {/* Mute Toggle */}
