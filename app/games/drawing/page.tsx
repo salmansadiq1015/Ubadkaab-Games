@@ -1,15 +1,22 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState, useRef, useEffect } from "react"
-import { useLanguage } from "@/contexts/language-context"
-import { useAudio } from "@/contexts/audio-context"
-import { useUser } from "@/contexts/user-context"
-import { Header } from "@/components/header"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { ArrowLeft, RotateCcw, Download, Palette, Target, Star } from "lucide-react"
-import Link from "next/link"
+import type React from "react";
+import { useState, useRef, useEffect } from "react";
+import { useLanguage } from "@/contexts/language-context";
+import { useAudio } from "@/contexts/audio-context";
+import { useUser } from "@/contexts/user-context";
+import { Header } from "@/components/header";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  ArrowLeft,
+  RotateCcw,
+  Download,
+  Palette,
+  Target,
+  Star,
+} from "lucide-react";
+import Link from "next/link";
 
 const colors = [
   "#FF6B6B",
@@ -30,18 +37,18 @@ const colors = [
   "#000000",
   "#FFFFFF",
   "#8B4513",
-]
+];
 
-const brushSizes = [2, 5, 10, 15, 20, 25, 30]
+const brushSizes = [2, 5, 10, 15, 20, 25, 30];
 
 interface DrawingChallenge {
-  type: "free" | "shape" | "object" | "pattern" | "color" | "story"
-  title: string
-  description: string
-  prompt: string
-  targetColors?: string[]
-  requiredShapes?: string[]
-  timeLimit?: number
+  type: "free" | "shape" | "object" | "pattern" | "color" | "story";
+  title: string;
+  description: string;
+  prompt: string;
+  targetColors?: string[];
+  requiredShapes?: string[];
+  timeLimit?: number;
 }
 
 const drawingPrompts = {
@@ -103,24 +110,27 @@ const drawingPrompts = {
     "playground fun",
     "garden party",
   ],
-}
+};
 
 export default function DrawingGame() {
-  const { t } = useLanguage()
-  const { playSound, speakText } = useAudio()
-  const { updateScore } = useUser()
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [isDrawing, setIsDrawing] = useState(false)
-  const [currentColor, setCurrentColor] = useState(colors[0])
-  const [brushSize, setBrushSize] = useState(5)
-  const [score, setScore] = useState(0)
-  const [level, setLevel] = useState(1)
-  const [lastPoint, setLastPoint] = useState<{ x: number; y: number } | null>(null)
-  const [currentChallenge, setCurrentChallenge] = useState<DrawingChallenge | null>(null)
-  const [timeLeft, setTimeLeft] = useState<number | null>(null)
-  const [isLevelComplete, setIsLevelComplete] = useState(false)
-  const [usedColors, setUsedColors] = useState<Set<string>>(new Set())
-  const [strokeCount, setStrokeCount] = useState(0)
+  const { t } = useLanguage();
+  const { playSound, speakText } = useAudio();
+  const { updateScore } = useUser();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [currentColor, setCurrentColor] = useState(colors[0]);
+  const [brushSize, setBrushSize] = useState(5);
+  const [score, setScore] = useState(0);
+  const [level, setLevel] = useState(1);
+  const [lastPoint, setLastPoint] = useState<{ x: number; y: number } | null>(
+    null
+  );
+  const [currentChallenge, setCurrentChallenge] =
+    useState<DrawingChallenge | null>(null);
+  const [timeLeft, setTimeLeft] = useState<number | null>(null);
+  const [isLevelComplete, setIsLevelComplete] = useState(false);
+  const [usedColors, setUsedColors] = useState<Set<string>>(new Set());
+  const [strokeCount, setStrokeCount] = useState(0);
 
   const generateDrawingChallenge = (level: number): DrawingChallenge => {
     if (level <= 2) {
@@ -129,35 +139,42 @@ export default function DrawingGame() {
         title: "Free Drawing",
         description: "Draw anything you like!",
         prompt: "Let your creativity flow! Draw whatever makes you happy.",
-      }
+      };
     } else if (level <= 5) {
-      const shapes = ["circle", "square", "triangle", "rectangle", "star", "heart"]
-      const shape = shapes[Math.floor(Math.random() * shapes.length)]
+      const shapes = [
+        "circle",
+        "square",
+        "triangle",
+        "rectangle",
+        "star",
+        "heart",
+      ];
+      const shape = shapes[Math.floor(Math.random() * shapes.length)];
       return {
         type: "shape",
         title: "Shape Challenge",
         description: `Draw a ${shape}`,
         prompt: `Can you draw a beautiful ${shape}? Make it colorful!`,
         requiredShapes: [shape],
-      }
+      };
     } else if (level <= 10) {
-      const objects = drawingPrompts.objects
-      const object = objects[Math.floor(Math.random() * objects.length)]
+      const objects = drawingPrompts.objects;
+      const object = objects[Math.floor(Math.random() * objects.length)];
       return {
         type: "object",
         title: "Object Drawing",
         description: `Draw a ${object}`,
         prompt: `Draw a creative ${object}! Add details and colors to make it special.`,
         timeLimit: 180, // 3 minutes
-      }
+      };
     } else if (level <= 15) {
-      const patterns = drawingPrompts.patterns
-      const pattern = patterns[Math.floor(Math.random() * patterns.length)]
-      const colorCount = Math.min(3 + Math.floor(level / 3), 6)
+      const patterns = drawingPrompts.patterns;
+      const pattern = patterns[Math.floor(Math.random() * patterns.length)];
+      const colorCount = Math.min(3 + Math.floor(level / 3), 6);
       const challengeColors = colors
         .slice()
         .sort(() => Math.random() - 0.5)
-        .slice(0, colorCount)
+        .slice(0, colorCount);
       return {
         type: "pattern",
         title: "Pattern Challenge",
@@ -165,13 +182,13 @@ export default function DrawingGame() {
         prompt: `Fill the canvas with a ${pattern} pattern using these specific colors!`,
         targetColors: challengeColors,
         timeLimit: 240, // 4 minutes
-      }
+      };
     } else if (level <= 25) {
-      const colorCount = Math.min(4 + Math.floor(level / 5), 8)
+      const colorCount = Math.min(4 + Math.floor(level / 5), 8);
       const challengeColors = colors
         .slice()
         .sort(() => Math.random() - 0.5)
-        .slice(0, colorCount)
+        .slice(0, colorCount);
       return {
         type: "color",
         title: "Color Mastery",
@@ -179,15 +196,15 @@ export default function DrawingGame() {
         prompt: `Create a masterpiece using ALL of these colors! Be creative and make something beautiful.`,
         targetColors: challengeColors,
         timeLimit: 300, // 5 minutes
-      }
+      };
     } else {
-      const stories = drawingPrompts.stories
-      const story = stories[Math.floor(Math.random() * stories.length)]
-      const colorCount = Math.min(5 + Math.floor(level / 10), colors.length)
+      const stories = drawingPrompts.stories;
+      const story = stories[Math.floor(Math.random() * stories.length)];
+      const colorCount = Math.min(5 + Math.floor(level / 10), colors.length);
       const challengeColors = colors
         .slice()
         .sort(() => Math.random() - 0.5)
-        .slice(0, colorCount)
+        .slice(0, colorCount);
       return {
         type: "story",
         title: "Story Illustration",
@@ -195,210 +212,226 @@ export default function DrawingGame() {
         prompt: `Draw a scene showing ${story}. Tell a story with your art! Use lots of colors and details.`,
         targetColors: challengeColors,
         timeLimit: 420, // 7 minutes
-      }
+      };
     }
-  }
+  };
 
   useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-    const ctx = canvas.getContext("2d")
-    if (!ctx) return
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
     // Set canvas size
-    const rect = canvas.getBoundingClientRect()
-    canvas.width = rect.width
-    canvas.height = rect.height
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width;
+    canvas.height = rect.height;
 
     // Set initial canvas background
-    ctx.fillStyle = "white"
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Set drawing properties
-    ctx.lineCap = "round"
-    ctx.lineJoin = "round"
-  }, [])
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+  }, []);
 
   useEffect(() => {
-    setCurrentChallenge(generateDrawingChallenge(level))
-    setUsedColors(new Set())
-    setStrokeCount(0)
-    setIsLevelComplete(false)
-    clearCanvas()
-  }, [level])
+    setCurrentChallenge(generateDrawingChallenge(level));
+    setUsedColors(new Set());
+    setStrokeCount(0);
+    setIsLevelComplete(false);
+    clearCanvas();
+  }, [level]);
 
   useEffect(() => {
     if (currentChallenge?.timeLimit && timeLeft === null) {
-      setTimeLeft(currentChallenge.timeLimit)
+      setTimeLeft(currentChallenge.timeLimit);
     }
-  }, [currentChallenge])
+  }, [currentChallenge]);
 
   useEffect(() => {
     if (timeLeft !== null && timeLeft > 0) {
-      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000)
-      return () => clearTimeout(timer)
+      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+      return () => clearTimeout(timer);
     } else if (timeLeft === 0) {
-      handleTimeUp()
+      handleTimeUp();
     }
-  }, [timeLeft])
+  }, [timeLeft]);
 
-  const getEventPos = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
-    const canvas = canvasRef.current
-    if (!canvas) return { x: 0, y: 0 }
+  const getEventPos = (
+    e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
+  ) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return { x: 0, y: 0 };
 
-    const rect = canvas.getBoundingClientRect()
+    const rect = canvas.getBoundingClientRect();
 
     if ("touches" in e) {
-      const touch = e.touches[0] || e.changedTouches[0]
+      const touch = e.touches[0] || e.changedTouches[0];
       return {
         x: touch.clientX - rect.left,
         y: touch.clientY - rect.top,
-      }
+      };
     } else {
       return {
         x: e.clientX - rect.left,
         y: e.clientY - rect.top,
-      }
+      };
     }
-  }
+  };
 
-  const startDrawing = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
-    e.preventDefault()
-    setIsDrawing(true)
-    const pos = getEventPos(e)
-    setLastPoint(pos)
-    setUsedColors((prev) => new Set([...prev, currentColor]))
-    draw(e)
-    playSound("click")
-  }
+  const startDrawing = (
+    e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
+  ) => {
+    e.preventDefault();
+    setIsDrawing(true);
+    const pos = getEventPos(e);
+    setLastPoint(pos);
+    setUsedColors((prev) => new Set([...prev, currentColor]));
+    draw(e);
+    playSound("click");
+  };
 
-  const draw = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
-    e.preventDefault()
-    if (!isDrawing) return
+  const draw = (
+    e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
+  ) => {
+    e.preventDefault();
+    if (!isDrawing) return;
 
-    const canvas = canvasRef.current
-    if (!canvas) return
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-    const ctx = canvas.getContext("2d")
-    if (!ctx) return
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-    const currentPos = getEventPos(e)
+    const currentPos = getEventPos(e);
 
-    ctx.lineWidth = brushSize
-    ctx.lineCap = "round"
-    ctx.strokeStyle = currentColor
+    ctx.lineWidth = brushSize;
+    ctx.lineCap = "round";
+    ctx.strokeStyle = currentColor;
 
     if (lastPoint) {
-      ctx.beginPath()
-      ctx.moveTo(lastPoint.x, lastPoint.y)
-      ctx.lineTo(currentPos.x, currentPos.y)
-      ctx.stroke()
+      ctx.beginPath();
+      ctx.moveTo(lastPoint.x, lastPoint.y);
+      ctx.lineTo(currentPos.x, currentPos.y);
+      ctx.stroke();
     }
 
-    setLastPoint(currentPos)
-    setScore((prev) => prev + 1)
-  }
+    setLastPoint(currentPos);
+    setScore((prev) => prev + 1);
+  };
 
-  const stopDrawing = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
-    e.preventDefault()
-    if (!isDrawing) return
-    setIsDrawing(false)
-    setLastPoint(null)
-    setStrokeCount((prev) => prev + 1)
-  }
+  const stopDrawing = (
+    e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>
+  ) => {
+    e.preventDefault();
+    if (!isDrawing) return;
+    setIsDrawing(false);
+    setLastPoint(null);
+    setStrokeCount((prev) => prev + 1);
+  };
 
   const clearCanvas = () => {
-    const canvas = canvasRef.current
-    if (!canvas) return
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-    const ctx = canvas.getContext("2d")
-    if (!ctx) return
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-    ctx.fillStyle = "white"
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
-    setUsedColors(new Set())
-    setStrokeCount(0)
-    playSound("click")
-  }
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    setUsedColors(new Set());
+    setStrokeCount(0);
+    playSound("click");
+  };
 
   const handleCompleteDrawing = () => {
-    if (!currentChallenge) return
+    if (!currentChallenge) return;
 
-    let bonusScore = 0
-    let feedback = "Great artwork! "
+    let bonusScore = 0;
+    let feedback = "Great artwork! ";
 
     // Calculate bonus based on challenge completion
     if (currentChallenge.targetColors) {
-      const colorUsageRatio = usedColors.size / currentChallenge.targetColors.length
-      const targetColorUsage = currentChallenge.targetColors.filter((color) => usedColors.has(color)).length
-      bonusScore += targetColorUsage * 20
+      const colorUsageRatio =
+        usedColors.size / currentChallenge.targetColors.length;
+      const targetColorUsage = currentChallenge.targetColors.filter((color) =>
+        usedColors.has(color)
+      ).length;
+      bonusScore += targetColorUsage * 20;
 
       if (targetColorUsage === currentChallenge.targetColors.length) {
-        feedback += "Perfect color usage! "
-        bonusScore += 50
+        feedback += "Perfect color usage! ";
+        bonusScore += 50;
       }
     }
 
     // Time bonus
     if (timeLeft && currentChallenge.timeLimit) {
-      const timeBonus = Math.floor((timeLeft / currentChallenge.timeLimit) * 30)
-      bonusScore += timeBonus
-      feedback += `Time bonus: ${timeBonus} points! `
+      const timeBonus = Math.floor(
+        (timeLeft / currentChallenge.timeLimit) * 30
+      );
+      bonusScore += timeBonus;
+      feedback += `Time bonus: ${timeBonus} points! `;
     }
 
     // Creativity bonus based on strokes and colors
-    const creativityBonus = Math.min(strokeCount * 2 + usedColors.size * 5, 100)
-    bonusScore += creativityBonus
+    const creativityBonus = Math.min(
+      strokeCount * 2 + usedColors.size * 5,
+      100
+    );
+    bonusScore += creativityBonus;
 
-    setScore((prev) => prev + bonusScore)
-    updateScore("drawing", bonusScore, level)
-    setIsLevelComplete(true)
-    playSound("correct")
+    setScore((prev) => prev + bonusScore);
+    updateScore("drawing", bonusScore, level);
+    setIsLevelComplete(true);
+    playSound("correct");
 
     setTimeout(() => {
-      speakText(feedback + `You earned ${bonusScore} bonus points!`)
-    }, 500)
-  }
+      speakText(feedback + `You earned ${bonusScore} bonus points!`);
+    }, 500);
+  };
 
   const handleTimeUp = () => {
-    handleCompleteDrawing()
-  }
+    handleCompleteDrawing();
+  };
 
   const handleNextLevel = () => {
-    setLevel((prev) => prev + 1)
-    playSound("correct")
-  }
+    setLevel((prev) => prev + 1);
+    playSound("correct");
+  };
 
   const downloadDrawing = () => {
-    const canvas = canvasRef.current
-    if (!canvas) return
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-    const link = document.createElement("a")
-    link.download = `level-${level}-artwork.png`
-    link.href = canvas.toDataURL()
-    link.click()
-    playSound("correct")
-  }
+    const link = document.createElement("a");
+    link.download = `level-${level}-artwork.png`;
+    link.href = canvas.toDataURL();
+    link.click();
+    playSound("correct");
+  };
 
   const handleColorSelect = (color: string) => {
-    setCurrentColor(color)
-    playSound("click")
-  }
+    setCurrentColor(color);
+    playSound("click");
+  };
 
   const handleBrushSizeSelect = (size: number) => {
-    setBrushSize(size)
-    playSound("click")
-  }
+    setBrushSize(size);
+    playSound("click");
+  };
 
   const handleRestart = () => {
-    playSound("click")
-    setScore(0)
-    setLevel(1)
-    setTimeLeft(null)
-    setIsLevelComplete(false)
-    clearCanvas()
-  }
+    playSound("click");
+    setScore(0);
+    setLevel(1);
+    setTimeLeft(null);
+    setIsLevelComplete(false);
+    clearCanvas();
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-100 via-blue-50 to-purple-100">
@@ -407,42 +440,59 @@ export default function DrawingGame() {
       <main className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
-          <Link href="/">
+          {/* <Link href="/">
             <Button variant="outline" className="bg-white text-gray-700 hover:bg-gray-100">
               <ArrowLeft className="w-4 h-4 mr-2" />
               {t("back")}
             </Button>
-          </Link>
+          </Link> */}
 
           <div className="flex items-center space-x-4">
-            <div className="bg-white rounded-full px-4 py-2 shadow-lg">
+            <div className="bg-white rounded-md px-4 py-2 shadow-lg">
               <span className="font-bold text-gray-800">
                 {t("score")}: {score}
               </span>
             </div>
-            <div className="bg-white rounded-full px-4 py-2 shadow-lg">
+            <div className="bg-white rounded-md px-4 py-2 shadow-lg">
               <span className="font-bold text-gray-800">
                 {t("level")}: {level}
               </span>
             </div>
             {timeLeft !== null && (
               <div
-                className={`rounded-full px-4 py-2 shadow-lg ${timeLeft <= 30 ? "bg-red-100 text-red-800" : "bg-white text-gray-800"}`}
+                className={`rounded-full px-4 py-2 shadow-lg ${
+                  timeLeft <= 30
+                    ? "bg-red-100 text-red-800"
+                    : "bg-white text-gray-800"
+                }`}
               >
                 <span className="font-bold">
-                  Time: {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, "0")}
+                  Time: {Math.floor(timeLeft / 60)}:
+                  {(timeLeft % 60).toString().padStart(2, "0")}
                 </span>
               </div>
             )}
-            <Button onClick={clearCanvas} variant="outline" className="bg-white text-gray-700 hover:bg-gray-100">
+            <Button
+              onClick={clearCanvas}
+              variant="outline"
+              className="bg-white text-gray-700 hover:bg-gray-100"
+            >
               <RotateCcw className="w-4 h-4 mr-2" />
               {t("clear")}
             </Button>
-            <Button onClick={downloadDrawing} variant="outline" className="bg-white text-gray-700 hover:bg-gray-100">
+            <Button
+              onClick={downloadDrawing}
+              variant="outline"
+              className="bg-white text-gray-700 hover:bg-gray-100"
+            >
               <Download className="w-4 h-4 mr-2" />
               Save
             </Button>
-            <Button onClick={handleRestart} variant="outline" className="bg-white text-gray-700 hover:bg-gray-100">
+            <Button
+              onClick={handleRestart}
+              variant="outline"
+              className="bg-white text-gray-700 hover:bg-gray-100"
+            >
               <RotateCcw className="w-4 h-4 mr-2" />
               {t("restart")}
             </Button>
@@ -456,27 +506,46 @@ export default function DrawingGame() {
           </h1>
           {currentChallenge && (
             <div className="bg-white rounded-xl p-4 shadow-lg max-w-2xl mx-auto">
-              <h2 className="text-xl font-bold text-gray-800 mb-2">{currentChallenge.title}</h2>
-              <p className="text-gray-600 mb-2">{currentChallenge.description}</p>
-              <p className="text-sm text-gray-500 italic">{currentChallenge.prompt}</p>
+              <h2 className="text-xl font-bold text-gray-800 mb-2">
+                {currentChallenge.title}
+              </h2>
+              <p className="text-gray-600 mb-2">
+                {currentChallenge.description}
+              </p>
+              <p className="text-sm text-gray-500 italic">
+                {currentChallenge.prompt}
+              </p>
 
               {currentChallenge.targetColors && (
                 <div className="mt-3">
-                  <p className="text-sm font-bold text-gray-700 mb-2">Required Colors:</p>
+                  <p className="text-sm font-bold text-gray-700 mb-2">
+                    Required Colors:
+                  </p>
                   <div className="flex justify-center space-x-2">
                     {currentChallenge.targetColors.map((color, index) => (
                       <div
                         key={index}
-                        className={`w-6 h-6 rounded-full border-2 ${usedColors.has(color) ? "border-green-500" : "border-gray-300"}`}
+                        className={`w-6 h-6 rounded-full border-2 ${
+                          usedColors.has(color)
+                            ? "border-green-500"
+                            : "border-gray-300"
+                        }`}
                         style={{ backgroundColor: color }}
                       >
-                        {usedColors.has(color) && <Star className="w-4 h-4 text-green-500 m-0.5" />}
+                        {usedColors.has(color) && (
+                          <Star className="w-4 h-4 text-green-500 m-0.5" />
+                        )}
                       </div>
                     ))}
                   </div>
                   <p className="text-xs text-gray-500 mt-1">
-                    Used: {currentChallenge.targetColors.filter((color) => usedColors.has(color)).length}/
-                    {currentChallenge.targetColors.length}
+                    Used:{" "}
+                    {
+                      currentChallenge.targetColors.filter((color) =>
+                        usedColors.has(color)
+                      ).length
+                    }
+                    /{currentChallenge.targetColors.length}
                   </p>
                 </div>
               )}
@@ -501,13 +570,17 @@ export default function DrawingGame() {
                       <button
                         key={color}
                         className={`w-12 h-12 rounded-full border-4 transition-all duration-300 hover:scale-110 active:scale-95 ${
-                          currentColor === color ? "border-gray-800 scale-110" : "border-gray-300"
-                        } ${usedColors.has(color) ? "ring-2 ring-green-400" : ""}`}
+                          currentColor === color
+                            ? "border-gray-800 scale-110"
+                            : "border-gray-300"
+                        } ${
+                          usedColors.has(color) ? "ring-2 ring-green-400" : ""
+                        }`}
                         style={{ backgroundColor: color }}
                         onClick={() => handleColorSelect(color)}
                         onTouchStart={(e) => {
-                          e.preventDefault()
-                          handleColorSelect(color)
+                          e.preventDefault();
+                          handleColorSelect(color);
                         }}
                       />
                     ))}
@@ -520,12 +593,14 @@ export default function DrawingGame() {
                       <button
                         key={size}
                         className={`w-full p-2 rounded-lg border-2 transition-all duration-300 active:scale-95 ${
-                          brushSize === size ? "border-blue-500 bg-blue-50" : "border-gray-300 hover:border-gray-400"
+                          brushSize === size
+                            ? "border-blue-500 bg-blue-50"
+                            : "border-gray-300 hover:border-gray-400"
                         }`}
                         onClick={() => handleBrushSizeSelect(size)}
                         onTouchStart={(e) => {
-                          e.preventDefault()
-                          handleBrushSizeSelect(size)
+                          e.preventDefault();
+                          handleBrushSizeSelect(size);
                         }}
                       >
                         <div
@@ -538,8 +613,12 @@ export default function DrawingGame() {
 
                   {/* Stats */}
                   <div className="mt-6 p-3 bg-gray-50 rounded-lg">
-                    <p className="text-sm text-gray-600">Colors Used: {usedColors.size}</p>
-                    <p className="text-sm text-gray-600">Strokes: {strokeCount}</p>
+                    <p className="text-sm text-gray-600">
+                      Colors Used: {usedColors.size}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      Strokes: {strokeCount}
+                    </p>
                   </div>
 
                   {/* Complete Button */}
@@ -571,7 +650,9 @@ export default function DrawingGame() {
                     onTouchEnd={stopDrawing}
                     onTouchCancel={stopDrawing}
                   />
-                  <p className="text-sm text-gray-500 mt-2 text-center">🖱️ Use mouse or 👆 touch to draw!</p>
+                  <p className="text-sm text-gray-500 mt-2 text-center">
+                    🖱️ Use mouse or 👆 touch to draw!
+                  </p>
                 </CardContent>
               </Card>
             </div>
@@ -581,7 +662,9 @@ export default function DrawingGame() {
           <div className="text-center">
             <Card className="bg-white shadow-2xl max-w-2xl mx-auto">
               <CardContent className="p-8">
-                <h2 className="text-4xl font-bold text-green-600 mb-4">🎨 Artwork Complete! 🎨</h2>
+                <h2 className="text-4xl font-bold text-green-600 mb-4">
+                  🎨 Artwork Complete! 🎨
+                </h2>
                 <div className="space-y-2 text-lg text-gray-700 mb-6">
                   <p>
                     Level {level} Challenge: {currentChallenge?.title}
@@ -591,7 +674,11 @@ export default function DrawingGame() {
                   <p>Final Score: {score} points</p>
                 </div>
                 <div className="space-x-4">
-                  <Button onClick={downloadDrawing} variant="outline" className="mb-4">
+                  <Button
+                    onClick={downloadDrawing}
+                    variant="outline"
+                    className="mb-4"
+                  >
                     <Download className="w-4 h-4 mr-2" />
                     Save Artwork
                   </Button>
@@ -606,5 +693,5 @@ export default function DrawingGame() {
         )}
       </main>
     </div>
-  )
+  );
 }

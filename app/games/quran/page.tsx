@@ -1,21 +1,33 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useLanguage } from "@/contexts/language-context"
-import { useAudio } from "@/contexts/audio-context"
-import { useUser } from "@/contexts/user-context"
-import { Header } from "@/components/header"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { ArrowLeft, RotateCcw, Play, BookOpen, Star, Volume2 } from "lucide-react"
-import Link from "next/link"
+import { useState } from "react";
+import { useLanguage } from "@/contexts/language-context";
+import { useAudio } from "@/contexts/audio-context";
+import { useUser } from "@/contexts/user-context";
+import { Header } from "@/components/header";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  ArrowLeft,
+  RotateCcw,
+  Play,
+  BookOpen,
+  Star,
+  Volume2,
+} from "lucide-react";
+import Link from "next/link";
 
 interface Surah {
-  id: number
-  name: string
-  nameArabic: string
-  meaning: string
-  verses: { id: number; arabic: string; english: string; transliteration: string }[]
+  id: number;
+  name: string;
+  nameArabic: string;
+  meaning: string;
+  verses: {
+    id: number;
+    arabic: string;
+    english: string;
+    transliteration: string;
+  }[];
 }
 
 const surahs: Surah[] = [
@@ -28,7 +40,8 @@ const surahs: Surah[] = [
       {
         id: 1,
         arabic: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
-        english: "In the name of Allah, the Entirely Merciful, the Especially Merciful.",
+        english:
+          "In the name of Allah, the Entirely Merciful, the Especially Merciful.",
         transliteration: "Bismillahi ar-rahmani ar-raheem",
       },
       {
@@ -63,10 +76,12 @@ const surahs: Surah[] = [
       },
       {
         id: 7,
-        arabic: "صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ",
+        arabic:
+          "صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ",
         english:
           "The path of those upon whom You have bestowed favor, not of those who have evoked anger or of those who are astray.",
-        transliteration: "Sirata allatheena an'amta alayhim ghayri al-maghdoobi alayhim wa la ad-dalleen",
+        transliteration:
+          "Sirata allatheena an'amta alayhim ghayri al-maghdoobi alayhim wa la ad-dalleen",
       },
     ],
   },
@@ -237,15 +252,18 @@ const surahs: Surah[] = [
       {
         id: 2,
         arabic: "وَرَأَيْتَ النَّاسَ يَدْخُلُونَ فِي دِينِ اللَّهِ أَفْوَاجًا",
-        english: "And you see the people entering into the religion of Allah in multitudes,",
+        english:
+          "And you see the people entering into the religion of Allah in multitudes,",
         transliteration: "Wa ra-aytan nasa yadkhuloona fee deenil lahi afwaja",
       },
       {
         id: 3,
-        arabic: "فَسَبِّحْ بِحَمْدِ رَبِّكَ وَاسْتَغْفِرْهُ ۚ إِنَّهُ كَانَ تَوَّابًا",
+        arabic:
+          "فَسَبِّحْ بِحَمْدِ رَبِّكَ وَاسْتَغْفِرْهُ ۚ إِنَّهُ كَانَ تَوَّابًا",
         english:
           "Then exalt [Him] with praise of your Lord and ask forgiveness of Him. Indeed, He is ever Accepting of repentance.",
-        transliteration: "Fasabbih bihamdi rabbika wastaghfirh, innahu kana tawwaba",
+        transliteration:
+          "Fasabbih bihamdi rabbika wastaghfirh, innahu kana tawwaba",
       },
     ],
   },
@@ -384,7 +402,8 @@ const surahs: Surah[] = [
       {
         id: 2,
         arabic: "إِيلَافِهِمْ رِحْلَةَ الشِّتَاءِ وَالصَّيْفِ",
-        english: "Their accustomed security [in] the caravan of winter and summer",
+        english:
+          "Their accustomed security [in] the caravan of winter and summer",
         transliteration: "Eelafihim rihlata ash-shita-i was-sayf",
       },
       {
@@ -396,135 +415,146 @@ const surahs: Surah[] = [
       {
         id: 4,
         arabic: "الَّذِي أَطْعَمَهُم مِّن جُوعٍ وَآمَنَهُم مِّنْ خَوْفٍ",
-        english: "Who has fed them, [saving them] from hunger and made them safe from fear.",
+        english:
+          "Who has fed them, [saving them] from hunger and made them safe from fear.",
         transliteration: "Allathee at'amahum min joo'in wa amanahum min khawf",
       },
     ],
   },
-]
+];
 
 export default function QuranGame() {
-  const { t } = useLanguage()
-  const { playSound, speakText, speakArabic } = useAudio()
-  const { updateScore } = useUser()
-  const [selectedSurah, setSelectedSurah] = useState<Surah | null>(null)
-  const [currentVerseIndex, setCurrentVerseIndex] = useState(0)
-  const [score, setScore] = useState(0)
-  const [showTranslation, setShowTranslation] = useState(false)
-  const [memorizedVerses, setMemorizedVerses] = useState<Set<string>>(new Set())
-  const [isPlaying, setIsPlaying] = useState(false)
+  const { t } = useLanguage();
+  const { playSound, speakText, speakArabic } = useAudio();
+  const { updateScore } = useUser();
+  const [selectedSurah, setSelectedSurah] = useState<Surah | null>(null);
+  const [currentVerseIndex, setCurrentVerseIndex] = useState(0);
+  const [score, setScore] = useState(0);
+  const [showTranslation, setShowTranslation] = useState(false);
+  const [memorizedVerses, setMemorizedVerses] = useState<Set<string>>(
+    new Set()
+  );
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const handleSurahSelect = (surah: Surah) => {
-    playSound("click")
-    setSelectedSurah(surah)
-    setCurrentVerseIndex(0)
-    setShowTranslation(false)
-  }
+    playSound("click");
+    setSelectedSurah(surah);
+    setCurrentVerseIndex(0);
+    setShowTranslation(false);
+  };
 
   const handlePlayVerse = async () => {
-    if (!selectedSurah || isPlaying) return
+    if (!selectedSurah || isPlaying) return;
 
-    setIsPlaying(true)
-    const currentVerse = selectedSurah.verses[currentVerseIndex]
+    setIsPlaying(true);
+    const currentVerse = selectedSurah.verses[currentVerseIndex];
 
     // Play a gentle tone first
-    playSound("music")
+    playSound("music");
 
     // Then speak the Arabic text using improved pronunciation
     setTimeout(() => {
-      speakArabic(currentVerse.arabic, currentVerse.transliteration)
-    }, 500)
+      speakArabic(currentVerse.arabic, currentVerse.transliteration);
+    }, 500);
 
     // Update score
-    setScore((prev) => prev + 5)
+    setScore((prev) => prev + 5);
 
     // Reset playing state after speech
     setTimeout(() => {
-      setIsPlaying(false)
-    }, 4000)
-  }
+      setIsPlaying(false);
+    }, 4000);
+  };
 
   const handlePlayFullSurah = async () => {
-    if (!selectedSurah || isPlaying) return
+    if (!selectedSurah || isPlaying) return;
 
-    setIsPlaying(true)
+    setIsPlaying(true);
 
     for (let i = 0; i < selectedSurah.verses.length; i++) {
-      setCurrentVerseIndex(i)
-      const verse = selectedSurah.verses[i]
+      setCurrentVerseIndex(i);
+      const verse = selectedSurah.verses[i];
 
       // Play tone
-      playSound("music")
+      playSound("music");
 
       // Speak verse with improved Arabic pronunciation
       await new Promise((resolve) => {
-        speakArabic(verse.arabic, verse.transliteration)
-        setTimeout(resolve, 5000) // Wait for speech to complete
-      })
+        speakArabic(verse.arabic, verse.transliteration);
+        setTimeout(resolve, 5000); // Wait for speech to complete
+      });
 
       // Pause between verses
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      await new Promise((resolve) => setTimeout(resolve, 1500));
     }
 
-    setIsPlaying(false)
-    setScore((prev) => prev + 50)
-    playSound("correct")
-  }
+    setIsPlaying(false);
+    setScore((prev) => prev + 50);
+    playSound("correct");
+  };
 
   const handleNextVerse = () => {
-    if (!selectedSurah) return
+    if (!selectedSurah) return;
 
-    playSound("click")
+    playSound("click");
     if (currentVerseIndex < selectedSurah.verses.length - 1) {
-      setCurrentVerseIndex((prev) => prev + 1)
+      setCurrentVerseIndex((prev) => prev + 1);
     } else {
       // Surah completed
-      updateScore("quran", score, selectedSurah.id)
-      playSound("correct")
+      updateScore("quran", score, selectedSurah.id);
+      playSound("correct");
       setTimeout(() => {
-        speakText(`Congratulations! You have completed Surah ${selectedSurah.name}. May Allah bless you!`, {
-          rate: 0.8,
-          pitch: 1.1,
-        })
-      }, 500)
+        speakText(
+          `Congratulations! You have completed Surah ${selectedSurah.name}. May Allah bless you!`,
+          {
+            rate: 0.8,
+            pitch: 1.1,
+          }
+        );
+      }, 500);
     }
-  }
+  };
 
   const handlePrevVerse = () => {
-    playSound("click")
+    playSound("click");
     if (currentVerseIndex > 0) {
-      setCurrentVerseIndex((prev) => prev - 1)
+      setCurrentVerseIndex((prev) => prev - 1);
     }
-  }
+  };
 
   const handleMemorize = () => {
-    if (!selectedSurah) return
+    if (!selectedSurah) return;
 
-    const verseKey = `${selectedSurah.id}-${currentVerseIndex}`
-    setMemorizedVerses((prev) => new Set([...prev, verseKey]))
-    setScore((prev) => prev + 20)
-    playSound("correct")
+    const verseKey = `${selectedSurah.id}-${currentVerseIndex}`;
+    setMemorizedVerses((prev) => new Set([...prev, verseKey]));
+    setScore((prev) => prev + 20);
+    playSound("correct");
 
     setTimeout(() => {
-      speakText("Excellent! You have memorized this verse. Keep up the great work!", {
-        rate: 0.8,
-        pitch: 1.2,
-      })
-    }, 300)
-  }
+      speakText(
+        "Excellent! You have memorized this verse. Keep up the great work!",
+        {
+          rate: 0.8,
+          pitch: 1.2,
+        }
+      );
+    }, 300);
+  };
 
   const handleRestart = () => {
-    playSound("click")
-    setSelectedSurah(null)
-    setCurrentVerseIndex(0)
-    setScore(0)
-    setShowTranslation(false)
-    setMemorizedVerses(new Set())
-    setIsPlaying(false)
-  }
+    playSound("click");
+    setSelectedSurah(null);
+    setCurrentVerseIndex(0);
+    setScore(0);
+    setShowTranslation(false);
+    setMemorizedVerses(new Set());
+    setIsPlaying(false);
+  };
 
-  const currentVerse = selectedSurah?.verses[currentVerseIndex]
-  const isVerseMemorized = selectedSurah ? memorizedVerses.has(`${selectedSurah.id}-${currentVerseIndex}`) : false
+  const currentVerse = selectedSurah?.verses[currentVerseIndex];
+  const isVerseMemorized = selectedSurah
+    ? memorizedVerses.has(`${selectedSurah.id}-${currentVerseIndex}`)
+    : false;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-100 via-green-50 to-teal-100">
@@ -533,23 +563,29 @@ export default function QuranGame() {
       <main className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
-          <Link href="/">
+          {/* <Link href="/">
             <Button variant="outline" className="bg-white text-gray-700 hover:bg-gray-100">
               <ArrowLeft className="w-4 h-4 mr-2" />
               {t("back")}
             </Button>
-          </Link>
+          </Link> */}
 
           <div className="flex items-center space-x-4">
-            <div className="bg-white rounded-full px-4 py-2 shadow-lg">
+            <div className="bg-white rounded-md px-4 py-2 shadow-lg">
               <span className="font-bold text-gray-800">
                 {t("score")}: {score}
               </span>
             </div>
-            <div className="bg-white rounded-full px-4 py-2 shadow-lg">
-              <span className="font-bold text-gray-800">Memorized: {memorizedVerses.size}</span>
+            <div className="bg-white rounded-md px-4 py-2 shadow-lg">
+              <span className="font-bold text-gray-800">
+                Memorized: {memorizedVerses.size}
+              </span>
             </div>
-            <Button onClick={handleRestart} variant="outline" className="bg-white text-gray-700 hover:bg-gray-100">
+            <Button
+              onClick={handleRestart}
+              variant="outline"
+              className="bg-white text-gray-700 hover:bg-gray-100"
+            >
               <RotateCcw className="w-4 h-4 mr-2" />
               {t("restart")}
             </Button>
@@ -561,7 +597,9 @@ export default function QuranGame() {
           <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-emerald-600 to-green-600 bg-clip-text text-transparent mb-4">
             📖 {t("quran")} 📖
           </h1>
-          <p className="text-xl text-gray-600">Learn and memorize beautiful verses from the Quran</p>
+          <p className="text-xl text-gray-600">
+            Learn and memorize beautiful verses from the Quran
+          </p>
         </div>
 
         {!selectedSurah ? (
@@ -577,10 +615,18 @@ export default function QuranGame() {
                   <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-emerald-500 to-green-500 flex items-center justify-center">
                     <BookOpen className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-800 mb-2">{surah.name}</h3>
-                  <p className="text-2xl text-emerald-600 mb-2 font-arabic">{surah.nameArabic}</p>
-                  <p className="text-sm text-gray-500 mb-4 italic">({surah.meaning})</p>
-                  <p className="text-sm text-gray-600">{surah.verses.length} verses</p>
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">
+                    {surah.name}
+                  </h3>
+                  <p className="text-2xl text-emerald-600 mb-2 font-arabic">
+                    {surah.nameArabic}
+                  </p>
+                  <p className="text-sm text-gray-500 mb-4 italic">
+                    ({surah.meaning})
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    {surah.verses.length} verses
+                  </p>
                 </CardContent>
               </Card>
             ))}
@@ -594,10 +640,15 @@ export default function QuranGame() {
                   <h2 className="text-2xl font-bold text-gray-800 mb-2">
                     {t("surah")} {selectedSurah.name}
                   </h2>
-                  <p className="text-3xl text-emerald-600 font-arabic mb-2">{selectedSurah.nameArabic}</p>
-                  <p className="text-lg text-gray-600 italic mb-4">({selectedSurah.meaning})</p>
+                  <p className="text-3xl text-emerald-600 font-arabic mb-2">
+                    {selectedSurah.nameArabic}
+                  </p>
+                  <p className="text-lg text-gray-600 italic mb-4">
+                    ({selectedSurah.meaning})
+                  </p>
                   <p className="text-gray-600">
-                    {t("verse")} {currentVerseIndex + 1} of {selectedSurah.verses.length}
+                    {t("verse")} {currentVerseIndex + 1} of{" "}
+                    {selectedSurah.verses.length}
                   </p>
                 </div>
 
@@ -611,20 +662,26 @@ export default function QuranGame() {
                       {isVerseMemorized && (
                         <div className="mt-2">
                           <Star className="w-6 h-6 text-yellow-500 mx-auto" />
-                          <p className="text-sm text-yellow-600 font-bold">Memorized!</p>
+                          <p className="text-sm text-yellow-600 font-bold">
+                            Memorized!
+                          </p>
                         </div>
                       )}
                     </div>
 
                     {/* Transliteration */}
                     <div className="text-center p-4 bg-gray-50 rounded-xl">
-                      <p className="text-lg text-gray-700 italic font-semibold">{currentVerse.transliteration}</p>
+                      <p className="text-lg text-gray-700 italic font-semibold">
+                        {currentVerse.transliteration}
+                      </p>
                     </div>
 
                     {/* Translation */}
                     {showTranslation && (
                       <div className="text-center p-4 bg-blue-50 rounded-xl">
-                        <p className="text-lg text-blue-800">{currentVerse.english}</p>
+                        <p className="text-lg text-blue-800">
+                          {currentVerse.english}
+                        </p>
                       </div>
                     )}
                   </div>
@@ -679,7 +736,11 @@ export default function QuranGame() {
                     Previous Verse
                   </Button>
 
-                  <Button onClick={() => setSelectedSurah(null)} variant="outline" className="px-6 py-3">
+                  <Button
+                    onClick={() => setSelectedSurah(null)}
+                    variant="outline"
+                    className="px-6 py-3"
+                  >
                     Back to Surahs
                   </Button>
 
@@ -688,7 +749,9 @@ export default function QuranGame() {
                     disabled={isPlaying}
                     className="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3"
                   >
-                    {currentVerseIndex < selectedSurah.verses.length - 1 ? "Next Verse" : "Complete Surah"}
+                    {currentVerseIndex < selectedSurah.verses.length - 1
+                      ? "Next Verse"
+                      : "Complete Surah"}
                   </Button>
                 </div>
               </CardContent>
@@ -699,16 +762,22 @@ export default function QuranGame() {
               <div className="bg-gray-200 rounded-full h-4 relative overflow-hidden">
                 <div
                   className="bg-gradient-to-r from-emerald-500 to-green-500 h-full rounded-full transition-all duration-500"
-                  style={{ width: `${((currentVerseIndex + 1) / selectedSurah.verses.length) * 100}%` }}
+                  style={{
+                    width: `${
+                      ((currentVerseIndex + 1) / selectedSurah.verses.length) *
+                      100
+                    }%`,
+                  }}
                 />
               </div>
               <p className="text-center mt-2 font-bold text-gray-700">
-                Progress: {currentVerseIndex + 1}/{selectedSurah.verses.length} verses
+                Progress: {currentVerseIndex + 1}/{selectedSurah.verses.length}{" "}
+                verses
               </p>
             </div>
           </div>
         )}
       </main>
     </div>
-  )
+  );
 }
