@@ -1,52 +1,70 @@
-"use client"
+"use client";
 
-import { useLanguage } from "@/contexts/language-context"
-import { useAudio } from "@/contexts/audio-context"
-import { Button } from "@/components/ui/button"
-import { Volume2, VolumeX, Home, User, Settings, Play, Zap, Menu, X } from "lucide-react"
-import Link from "next/link"
-import { useState } from "react"
+import { useLanguage } from "@/contexts/language-context";
+import { useAudio } from "@/contexts/audio-context";
+import { Button } from "@/components/ui/button";
+import {
+  Volume2,
+  VolumeX,
+  Home,
+  User,
+  Settings,
+  Play,
+  Zap,
+  Menu,
+  X,
+} from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
 
 export function Header() {
-  const { language, setLanguage, t, isRTL } = useLanguage()
-  const { isMuted, toggleMute, playSound, currentVoice, setVoicePreference, isAudioReady, debugInfo } = useAudio()
-  const [showSettings, setShowSettings] = useState(false)
-  const [showMobileMenu, setShowMobileMenu] = useState(false)
+  const { language, setLanguage, t, isRTL } = useLanguage();
+  const {
+    isMuted,
+    toggleMute,
+    playSound,
+    currentVoice,
+    setVoicePreference,
+    isAudioReady,
+    debugInfo,
+  } = useAudio();
+  const [showSettings, setShowSettings] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   const handleLanguageChange = (lang: "en" | "ar" | "so") => {
-    playSound("click")
-    setLanguage(lang)
-    setShowMobileMenu(false)
-  }
+    playSound("click");
+    setLanguage(lang);
+    setShowMobileMenu(false);
+  };
 
   const handleMuteToggle = () => {
-    toggleMute()
+    toggleMute();
     if (isMuted) {
-      setTimeout(() => playSound("click"), 100)
+      setTimeout(() => playSound("click"), 100);
     }
-  }
+  };
 
   const handleVoiceChange = (preference: "male" | "female") => {
-    playSound("click")
-    setVoicePreference(preference)
-    setShowSettings(false)
-  }
+    playSound("click");
+    setVoicePreference(preference);
+    setShowSettings(false);
+  };
 
   const handleSettingsToggle = () => {
-    playSound("click")
-    setShowSettings(!showSettings)
-  }
+    playSound("click");
+    setShowSettings(!showSettings);
+  };
 
   const testAllSounds = () => {
-    playSound("click")
-    setTimeout(() => playSound("correct"), 500)
-    setTimeout(() => playSound("letter", "A"), 2000)
-    setTimeout(() => playSound("music"), 4000)
-  }
+    playSound("click");
+    setTimeout(() => playSound("correct"), 500);
+    setTimeout(() => playSound("letter", "A"), 2000);
+    setTimeout(() => playSound("music"), 4000);
+  };
 
   const testBeep = () => {
-    playSound("click")
-  }
+    playSound("click");
+  };
 
   return (
     <header className="bg-white shadow-lg border-b-4 border-yellow-300 relative">
@@ -55,7 +73,9 @@ export function Header() {
           {/* Logo - Always visible */}
           <Link href="/" className="flex items-center space-x-2 flex-shrink-0">
             <div className="w-8 h-8 sm:w-12 sm:h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-sm sm:text-xl">🎓</span>
+              <span className="text-white font-bold text-sm sm:text-xl">
+                🎓
+              </span>
             </div>
             <h1 className="text-lg sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hidden sm:block">
               {t("home")}
@@ -102,7 +122,9 @@ export function Header() {
                 size="sm"
                 onClick={handleSettingsToggle}
                 className={`rounded-full p-2 ${
-                  isAudioReady ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"
+                  isAudioReady
+                    ? "bg-green-100 text-green-700"
+                    : "bg-yellow-100 text-yellow-700"
                 }`}
               >
                 <Settings className="w-5 h-5" />
@@ -111,19 +133,27 @@ export function Header() {
               {/* Settings Dropdown */}
               {showSettings && (
                 <div className="absolute right-0 top-12 bg-white rounded-lg shadow-xl border-2 border-gray-200 p-4 z-50 min-w-80">
-                  <h3 className="font-bold text-gray-800 mb-3">🔊 Audio Debug Panel</h3>
+                  <h3 className="font-bold text-gray-800 mb-3">
+                    🔊 Audio Debug Panel
+                  </h3>
 
                   {/* Debug Info */}
                   <div className="mb-4 p-3 bg-gray-50 rounded text-xs">
                     <p className="font-bold mb-1">Status:</p>
                     <p className="text-gray-600 break-words">{debugInfo}</p>
-                    <p className="mt-1">Ready: {isAudioReady ? "✅ Yes" : "❌ No"}</p>
+                    <p className="mt-1">
+                      Ready: {isAudioReady ? "✅ Yes" : "❌ No"}
+                    </p>
                     <p>Muted: {isMuted ? "🔇 Yes" : "🔊 No"}</p>
                   </div>
 
                   {/* Test Buttons */}
                   <div className="mb-4 grid grid-cols-2 gap-2">
-                    <Button onClick={testBeep} size="sm" className="bg-blue-500 hover:bg-blue-600 text-white text-xs">
+                    <Button
+                      onClick={testBeep}
+                      size="sm"
+                      className="bg-blue-500 hover:bg-blue-600 text-white text-xs"
+                    >
                       <Zap className="w-3 h-3 mr-1" />
                       Beep
                     </Button>
@@ -184,7 +214,9 @@ export function Header() {
                   {/* Current Voice Info */}
                   <div className="mb-4">
                     <p className="text-sm text-gray-600 mb-1">Current Voice:</p>
-                    <p className="text-xs text-gray-500 truncate">{currentVoice}</p>
+                    <p className="text-xs text-gray-500 truncate">
+                      {currentVoice}
+                    </p>
                   </div>
 
                   {/* Mute Toggle */}
@@ -192,7 +224,9 @@ export function Header() {
                     onClick={handleMuteToggle}
                     size="sm"
                     className={`w-full ${
-                      isMuted ? "bg-red-500 hover:bg-red-600 text-white" : "bg-green-500 hover:bg-green-600 text-white"
+                      isMuted
+                        ? "bg-red-500 hover:bg-red-600 text-white"
+                        : "bg-green-500 hover:bg-green-600 text-white"
                     }`}
                   >
                     {isMuted ? (
@@ -210,9 +244,15 @@ export function Header() {
 
                   {/* Instructions */}
                   <div className="mt-4 p-2 bg-blue-50 rounded text-xs">
-                    <p className="font-bold text-blue-800">💡 Troubleshooting:</p>
-                    <p className="text-blue-700">1. Click any test button above</p>
-                    <p className="text-blue-700">2. Check browser console for errors</p>
+                    <p className="font-bold text-blue-800">
+                      💡 Troubleshooting:
+                    </p>
+                    <p className="text-blue-700">
+                      1. Click any test button above
+                    </p>
+                    <p className="text-blue-700">
+                      2. Check browser console for errors
+                    </p>
                     <p className="text-blue-700">3. Try refreshing the page</p>
                     <p className="text-blue-700">4. Ensure volume is up</p>
                   </div>
@@ -222,7 +262,7 @@ export function Header() {
 
             {/* Navigation */}
             <div className="flex space-x-2">
-              <Link href="/">
+              {/* <Link href="/">
                 <Button
                   variant="outline"
                   size="sm"
@@ -230,8 +270,8 @@ export function Header() {
                 >
                   <Home className="w-5 h-5" />
                 </Button>
-              </Link>
-              <Link href="/profile">
+              </Link> */}
+              {/* <Link href="/profile">
                 <Button
                   variant="outline"
                   size="sm"
@@ -239,7 +279,7 @@ export function Header() {
                 >
                   <User className="w-5 h-5" />
                 </Button>
-              </Link>
+              </Link> */}
             </div>
           </div>
 
@@ -249,9 +289,17 @@ export function Header() {
             <Button
               onClick={handleMuteToggle}
               size="sm"
-              className={`rounded-full p-2 ${isMuted ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"}`}
+              className={`rounded-full p-2 ${
+                isMuted
+                  ? "bg-red-100 text-red-700"
+                  : "bg-green-100 text-green-700"
+              }`}
             >
-              {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+              {isMuted ? (
+                <VolumeX className="w-4 h-4" />
+              ) : (
+                <Volume2 className="w-4 h-4" />
+              )}
             </Button>
 
             <Button
@@ -260,7 +308,11 @@ export function Header() {
               size="sm"
               className="rounded-full p-2"
             >
-              {showMobileMenu ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {showMobileMenu ? (
+                <X className="w-5 h-5" />
+              ) : (
+                <Menu className="w-5 h-5" />
+              )}
             </Button>
           </div>
         </div>
@@ -271,7 +323,9 @@ export function Header() {
             <div className="p-4 space-y-4">
               {/* Language Switcher Mobile */}
               <div>
-                <p className="text-sm font-bold text-gray-700 mb-2">Language:</p>
+                <p className="text-sm font-bold text-gray-700 mb-2">
+                  Language:
+                </p>
                 <div className="grid grid-cols-3 gap-2">
                   {(["en", "ar", "so"] as const).map((lang) => (
                     <Button
@@ -293,7 +347,9 @@ export function Header() {
 
               {/* Navigation Mobile */}
               <div>
-                <p className="text-sm font-bold text-gray-700 mb-2">Navigation:</p>
+                <p className="text-sm font-bold text-gray-700 mb-2">
+                  Navigation:
+                </p>
                 <div className="grid grid-cols-2 gap-2">
                   <Link href="/" onClick={() => setShowMobileMenu(false)}>
                     <Button variant="outline" className="w-full justify-start">
@@ -301,7 +357,10 @@ export function Header() {
                       {t("home")}
                     </Button>
                   </Link>
-                  <Link href="/profile" onClick={() => setShowMobileMenu(false)}>
+                  <Link
+                    href="/profile"
+                    onClick={() => setShowMobileMenu(false)}
+                  >
                     <Button variant="outline" className="w-full justify-start">
                       <User className="w-4 h-4 mr-2" />
                       {t("profile")}
@@ -315,8 +374,14 @@ export function Header() {
                 <p className="text-sm font-bold text-gray-700 mb-2">Audio:</p>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                    <span className="text-sm">Status: {isAudioReady ? "✅ Ready" : "❌ Not Ready"}</span>
-                    <Button onClick={testBeep} size="sm" className="bg-green-500 hover:bg-green-600 text-white">
+                    <span className="text-sm">
+                      Status: {isAudioReady ? "✅ Ready" : "❌ Not Ready"}
+                    </span>
+                    <Button
+                      onClick={testBeep}
+                      size="sm"
+                      className="bg-green-500 hover:bg-green-600 text-white"
+                    >
                       Test 🔊
                     </Button>
                   </div>
@@ -324,7 +389,9 @@ export function Header() {
                   <Button
                     onClick={handleMuteToggle}
                     className={`w-full ${
-                      isMuted ? "bg-red-500 hover:bg-red-600 text-white" : "bg-green-500 hover:bg-green-600 text-white"
+                      isMuted
+                        ? "bg-red-500 hover:bg-red-600 text-white"
+                        : "bg-green-500 hover:bg-green-600 text-white"
                     }`}
                   >
                     {isMuted ? (
@@ -344,7 +411,9 @@ export function Header() {
 
               {/* Quick Test Buttons Mobile */}
               <div>
-                <p className="text-sm font-bold text-gray-700 mb-2">Quick Tests:</p>
+                <p className="text-sm font-bold text-gray-700 mb-2">
+                  Quick Tests:
+                </p>
                 <div className="grid grid-cols-2 gap-2">
                   <Button
                     onClick={() => playSound("correct")}
@@ -367,5 +436,5 @@ export function Header() {
         )}
       </div>
     </header>
-  )
+  );
 }
