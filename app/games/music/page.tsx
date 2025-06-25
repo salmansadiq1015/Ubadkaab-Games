@@ -1,27 +1,27 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useLanguage } from "@/contexts/language-context"
-import { useAudio } from "@/contexts/audio-context"
-import { useUser } from "@/contexts/user-context"
-import { Header } from "@/components/header"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { ArrowLeft, RotateCcw, Play, Music, Volume2 } from "lucide-react"
-import Link from "next/link"
+import { useState } from "react";
+import { useLanguage } from "@/contexts/language-context";
+import { useAudio } from "@/contexts/audio-context";
+import { useUser } from "@/contexts/user-context";
+import { Header } from "@/components/header";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { ArrowLeft, RotateCcw, Play, Music, Volume2 } from "lucide-react";
+import Link from "next/link";
 
 interface Note {
-  id: string
-  name: string
-  color: string
-  sound: string
+  id: string;
+  name: string;
+  color: string;
+  sound: string;
 }
 
 interface Song {
-  id: number
-  name: string
-  notes: string[]
-  tempo: number
+  id: number;
+  name: string;
+  notes: string[];
+  tempo: number;
 }
 
 const pianoNotes: Note[] = [
@@ -37,7 +37,7 @@ const pianoNotes: Note[] = [
   { id: "A", name: "A", color: "bg-white border-gray-300", sound: "A" },
   { id: "A#", name: "A#", color: "bg-gray-800", sound: "A#" },
   { id: "B", name: "B", color: "bg-white border-gray-300", sound: "B" },
-]
+];
 
 const simpleSongs: Song[] = [
   {
@@ -58,79 +58,79 @@ const simpleSongs: Song[] = [
     notes: ["E", "D", "C", "D", "E", "E", "E"],
     tempo: 450,
   },
-]
+];
 
 export default function MusicGame() {
-  const { t } = useLanguage()
-  const { playSound } = useAudio()
-  const { updateScore } = useUser()
-  const [currentMode, setCurrentMode] = useState<"piano" | "songs">("piano")
-  const [playedNotes, setPlayedNotes] = useState<string[]>([])
-  const [score, setScore] = useState(0)
-  const [selectedSong, setSelectedSong] = useState<Song | null>(null)
-  const [isPlayingSong, setIsPlayingSong] = useState(false)
-  const [currentNoteIndex, setCurrentNoteIndex] = useState(0)
-  const [learnedSongs, setLearnedSongs] = useState<Set<number>>(new Set())
+  const { t } = useLanguage();
+  const { playSound } = useAudio();
+  const { updateScore } = useUser();
+  const [currentMode, setCurrentMode] = useState<"piano" | "songs">("piano");
+  const [playedNotes, setPlayedNotes] = useState<string[]>([]);
+  const [score, setScore] = useState(0);
+  const [selectedSong, setSelectedSong] = useState<Song | null>(null);
+  const [isPlayingSong, setIsPlayingSong] = useState(false);
+  const [currentNoteIndex, setCurrentNoteIndex] = useState(0);
+  const [learnedSongs, setLearnedSongs] = useState<Set<number>>(new Set());
 
   const handleNotePress = (note: Note) => {
-    playSound("music")
-    setPlayedNotes((prev) => [...prev, note.id])
-    setScore((prev) => prev + 5)
+    playSound("music");
+    setPlayedNotes((prev) => [...prev, note.id]);
+    setScore((prev) => prev + 5);
 
     // Visual feedback
     setTimeout(() => {
       // Remove visual feedback after animation
-    }, 200)
-  }
+    }, 200);
+  };
 
   const handleClearNotes = () => {
-    playSound("click")
-    setPlayedNotes([])
-  }
+    playSound("click");
+    setPlayedNotes([]);
+  };
 
   const playSong = async (song: Song) => {
-    setIsPlayingSong(true)
-    setSelectedSong(song)
-    setCurrentNoteIndex(0)
+    setIsPlayingSong(true);
+    setSelectedSong(song);
+    setCurrentNoteIndex(0);
 
     for (let i = 0; i < song.notes.length; i++) {
-      setCurrentNoteIndex(i)
-      playSound("music")
-      await new Promise((resolve) => setTimeout(resolve, song.tempo))
+      setCurrentNoteIndex(i);
+      playSound("music");
+      await new Promise((resolve) => setTimeout(resolve, song.tempo));
     }
 
-    setIsPlayingSong(false)
-    setCurrentNoteIndex(0)
-  }
+    setIsPlayingSong(false);
+    setCurrentNoteIndex(0);
+  };
 
   const handleLearnSong = (song: Song) => {
-    playSound("click")
-    setSelectedSong(song)
-    setPlayedNotes([])
-  }
+    playSound("click");
+    setSelectedSong(song);
+    setPlayedNotes([]);
+  };
 
   const handleSongComplete = (song: Song) => {
     if (JSON.stringify(playedNotes) === JSON.stringify(song.notes)) {
-      playSound("correct")
-      setLearnedSongs((prev) => new Set([...prev, song.id]))
-      setScore((prev) => prev + 100)
-      updateScore("music", 100, song.id)
+      playSound("correct");
+      setLearnedSongs((prev) => new Set([...prev, song.id]));
+      setScore((prev) => prev + 100);
+      updateScore("music", 100, song.id);
     } else {
-      playSound("wrong")
+      playSound("wrong");
     }
-  }
+  };
 
   const handleRestart = () => {
-    playSound("click")
-    setPlayedNotes([])
-    setScore(0)
-    setSelectedSong(null)
-    setIsPlayingSong(false)
-    setCurrentNoteIndex(0)
-    setLearnedSongs(new Set())
-  }
+    playSound("click");
+    setPlayedNotes([]);
+    setScore(0);
+    setSelectedSong(null);
+    setIsPlayingSong(false);
+    setCurrentNoteIndex(0);
+    setLearnedSongs(new Set());
+  };
 
-  const isBlackKey = (noteId: string) => noteId.includes("#")
+  const isBlackKey = (noteId: string) => noteId.includes("#");
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100">
@@ -139,12 +139,12 @@ export default function MusicGame() {
       <main className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
-          <Link href="/">
+          {/* <Link href="/">
             <Button variant="outline" className="bg-white text-gray-700 hover:bg-gray-100">
               <ArrowLeft className="w-4 h-4 mr-2" />
               {t("back")}
             </Button>
-          </Link>
+          </Link> */}
 
           <div className="flex items-center space-x-4">
             <div className="bg-white rounded-full px-4 py-2 shadow-lg">
@@ -157,7 +157,11 @@ export default function MusicGame() {
                 Songs Learned: {learnedSongs.size}/{simpleSongs.length}
               </span>
             </div>
-            <Button onClick={handleRestart} variant="outline" className="bg-white text-gray-700 hover:bg-gray-100">
+            <Button
+              onClick={handleRestart}
+              variant="outline"
+              className="bg-white text-gray-700 hover:bg-gray-100"
+            >
               <RotateCcw className="w-4 h-4 mr-2" />
               {t("restart")}
             </Button>
@@ -169,7 +173,9 @@ export default function MusicGame() {
           <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-4">
             🎵 {t("music")} 🎵
           </h1>
-          <p className="text-xl text-gray-600">Create beautiful music and learn popular songs!</p>
+          <p className="text-xl text-gray-600">
+            Create beautiful music and learn popular songs!
+          </p>
         </div>
 
         {/* Mode Selector */}
@@ -202,12 +208,19 @@ export default function MusicGame() {
             <Card className="bg-white shadow-2xl mb-6">
               <CardContent className="p-8">
                 <div className="text-center mb-6">
-                  <h2 className="text-2xl font-bold text-gray-800 mb-4">Virtual Piano</h2>
-                  <p className="text-gray-600">Click on the keys to play beautiful music!</p>
+                  <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                    Virtual Piano
+                  </h2>
+                  <p className="text-gray-600">
+                    Click on the keys to play beautiful music!
+                  </p>
                 </div>
 
                 {/* Piano Keys */}
-                <div className="relative mx-auto" style={{ width: "fit-content" }}>
+                <div
+                  className="relative mx-auto"
+                  style={{ width: "fit-content" }}
+                >
                   <div className="flex">
                     {pianoNotes
                       .filter((note) => !isBlackKey(note.id))
@@ -227,10 +240,12 @@ export default function MusicGame() {
                   {/* Black Keys */}
                   <div className="absolute top-0 flex">
                     {pianoNotes.map((note, index) => {
-                      if (!isBlackKey(note.id)) return null
+                      if (!isBlackKey(note.id)) return null;
 
-                      const whiteKeysBefore = pianoNotes.slice(0, index).filter((n) => !isBlackKey(n.id)).length
-                      const leftOffset = whiteKeysBefore * 64 - 20 // 64px width, -20px to center
+                      const whiteKeysBefore = pianoNotes
+                        .slice(0, index)
+                        .filter((n) => !isBlackKey(n.id)).length;
+                      const leftOffset = whiteKeysBefore * 64 - 20; // 64px width, -20px to center
 
                       return (
                         <button
@@ -239,16 +254,20 @@ export default function MusicGame() {
                           style={{ left: `${leftOffset}px` }}
                           onClick={() => handleNotePress(note)}
                         >
-                          <span className="text-xs font-bold mt-16 block">{note.name}</span>
+                          <span className="text-xs font-bold mt-16 block">
+                            {note.name}
+                          </span>
                         </button>
-                      )
+                      );
                     })}
                   </div>
                 </div>
 
                 {/* Played Notes Display */}
                 <div className="mt-8 text-center">
-                  <h3 className="text-lg font-bold text-gray-800 mb-4">Notes Played:</h3>
+                  <h3 className="text-lg font-bold text-gray-800 mb-4">
+                    Notes Played:
+                  </h3>
                   <div className="bg-gray-50 rounded-lg p-4 min-h-16 flex items-center justify-center">
                     {playedNotes.length > 0 ? (
                       <div className="flex flex-wrap gap-2">
@@ -262,7 +281,9 @@ export default function MusicGame() {
                         ))}
                       </div>
                     ) : (
-                      <p className="text-gray-500">Start playing to see your notes here!</p>
+                      <p className="text-gray-500">
+                        Start playing to see your notes here!
+                      </p>
                     )}
                   </div>
 
@@ -298,7 +319,9 @@ export default function MusicGame() {
                           </div>
                         )}
                       </div>
-                      <h3 className="text-xl font-bold text-gray-800 mb-4">{song.name}</h3>
+                      <h3 className="text-xl font-bold text-gray-800 mb-4">
+                        {song.name}
+                      </h3>
                       <div className="space-y-2">
                         <Button
                           onClick={() => playSong(song)}
@@ -306,9 +329,15 @@ export default function MusicGame() {
                           className="w-full bg-indigo-500 hover:bg-indigo-600 text-white"
                         >
                           <Play className="w-4 h-4 mr-2" />
-                          {isPlayingSong && selectedSong?.id === song.id ? "Playing..." : "Listen"}
+                          {isPlayingSong && selectedSong?.id === song.id
+                            ? "Playing..."
+                            : "Listen"}
                         </Button>
-                        <Button onClick={() => handleLearnSong(song)} variant="outline" className="w-full">
+                        <Button
+                          onClick={() => handleLearnSong(song)}
+                          variant="outline"
+                          className="w-full"
+                        >
                           Learn to Play
                         </Button>
                       </div>
@@ -321,13 +350,19 @@ export default function MusicGame() {
               <Card className="bg-white shadow-2xl">
                 <CardContent className="p-8">
                   <div className="text-center mb-6">
-                    <h2 className="text-2xl font-bold text-gray-800 mb-2">Learning: {selectedSong.name}</h2>
-                    <p className="text-gray-600">Follow the pattern and play the notes in order!</p>
+                    <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                      Learning: {selectedSong.name}
+                    </h2>
+                    <p className="text-gray-600">
+                      Follow the pattern and play the notes in order!
+                    </p>
                   </div>
 
                   {/* Song Pattern */}
                   <div className="mb-6">
-                    <h3 className="text-lg font-bold text-gray-800 mb-4 text-center">Song Pattern:</h3>
+                    <h3 className="text-lg font-bold text-gray-800 mb-4 text-center">
+                      Song Pattern:
+                    </h3>
                     <div className="flex justify-center space-x-2 flex-wrap">
                       {selectedSong.notes.map((note, index) => (
                         <div
@@ -338,8 +373,8 @@ export default function MusicGame() {
                                 ? "bg-green-500 text-white border-green-500"
                                 : "bg-red-500 text-white border-red-500"
                               : index === playedNotes.length
-                                ? "bg-yellow-200 border-yellow-500 text-yellow-800 animate-pulse"
-                                : "bg-gray-100 border-gray-300 text-gray-600"
+                              ? "bg-yellow-200 border-yellow-500 text-yellow-800 animate-pulse"
+                              : "bg-gray-100 border-gray-300 text-gray-600"
                           }`}
                         >
                           {note}
@@ -373,7 +408,12 @@ export default function MusicGame() {
                     <div className="bg-gray-200 rounded-full h-4 relative overflow-hidden">
                       <div
                         className="bg-gradient-to-r from-indigo-500 to-purple-500 h-full rounded-full transition-all duration-500"
-                        style={{ width: `${(playedNotes.length / selectedSong.notes.length) * 100}%` }}
+                        style={{
+                          width: `${
+                            (playedNotes.length / selectedSong.notes.length) *
+                            100
+                          }%`,
+                        }}
                       />
                     </div>
                     <p className="text-center mt-2 font-bold text-gray-700">
@@ -383,20 +423,29 @@ export default function MusicGame() {
 
                   {/* Controls */}
                   <div className="flex justify-center space-x-4">
-                    <Button onClick={() => playSong(selectedSong)} disabled={isPlayingSong} variant="outline">
+                    <Button
+                      onClick={() => playSong(selectedSong)}
+                      disabled={isPlayingSong}
+                      variant="outline"
+                    >
                       <Volume2 className="w-4 h-4 mr-2" />
                       Play Song
                     </Button>
 
                     <Button
                       onClick={() => handleSongComplete(selectedSong)}
-                      disabled={playedNotes.length !== selectedSong.notes.length}
+                      disabled={
+                        playedNotes.length !== selectedSong.notes.length
+                      }
                       className="bg-green-500 hover:bg-green-600 text-white"
                     >
                       Check My Playing
                     </Button>
 
-                    <Button onClick={() => setSelectedSong(null)} variant="outline">
+                    <Button
+                      onClick={() => setSelectedSong(null)}
+                      variant="outline"
+                    >
                       Back to Songs
                     </Button>
                   </div>
@@ -405,8 +454,12 @@ export default function MusicGame() {
                   {learnedSongs.has(selectedSong.id) && (
                     <div className="text-center mt-6">
                       <div className="bg-green-100 rounded-xl p-6">
-                        <h3 className="text-2xl font-bold text-green-600 mb-2">🎉 Song Learned! 🎉</h3>
-                        <p className="text-green-700">Perfect! You've mastered {selectedSong.name}!</p>
+                        <h3 className="text-2xl font-bold text-green-600 mb-2">
+                          🎉 Song Learned! 🎉
+                        </h3>
+                        <p className="text-green-700">
+                          Perfect! You've mastered {selectedSong.name}!
+                        </p>
                       </div>
                     </div>
                   )}
@@ -417,5 +470,5 @@ export default function MusicGame() {
         )}
       </main>
     </div>
-  )
+  );
 }
