@@ -351,13 +351,13 @@ export function Header() {
                   Navigation:
                 </p>
                 <div className="grid grid-cols-2 gap-2">
-                  <Link href="/" onClick={() => setShowMobileMenu(false)}>
+                  {/* <Link href="/" onClick={() => setShowMobileMenu(false)}>
                     <Button variant="outline" className="w-full justify-start">
                       <Home className="w-4 h-4 mr-2" />
                       {t("home")}
                     </Button>
-                  </Link>
-                  <Link
+                  </Link> */}
+                  {/* <Link
                     href="/profile"
                     onClick={() => setShowMobileMenu(false)}
                   >
@@ -365,7 +365,7 @@ export function Header() {
                       <User className="w-4 h-4 mr-2" />
                       {t("profile")}
                     </Button>
-                  </Link>
+                  </Link> */}
                 </div>
               </div>
 
