@@ -49,6 +49,47 @@
   textarea {
     font-size: 16px;
   }
+
+  /* Responsive container improvements */
+  .container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .container {
+      max-width: 640px;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .container {
+      max-width: 768px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container {
+      max-width: 1024px;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .container {
+      max-width: 1280px;
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .container {
+      max-width: 1536px;
+    }
+  }
 }
 
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;700&display=swap");
@@ -92,20 +133,20 @@
 
 @layer components {
   .game-card {
-    @apply bg-white rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95 p-6 cursor-pointer border-4 border-transparent hover:border-yellow-300;
+    @apply bg-white rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95 p-4 sm:p-6 cursor-pointer border-4 border-transparent hover:border-yellow-300;
     /* Better touch feedback */
     -webkit-tap-highlight-color: rgba(59, 130, 246, 0.1);
   }
 
   .game-button {
-    @apply bg-gradient-to-r from-blue-400 to-purple-500 text-white font-bold py-3 px-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95;
+    @apply bg-gradient-to-r from-blue-400 to-purple-500 text-white font-bold py-2 px-4 sm:py-3 sm:px-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95;
     /* Improve touch target */
     min-height: 48px;
     touch-action: manipulation;
   }
 
   .kid-button {
-    @apply bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-bold py-4 px-8 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 active:scale-95 text-lg;
+    @apply bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-bold py-3 px-6 sm:py-4 sm:px-8 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 active:scale-95 text-base sm:text-lg;
     /* Improve touch target */
     min-height: 56px;
     touch-action: manipulation;
@@ -119,6 +160,45 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+  }
+
+  /* Responsive text sizes */
+  .responsive-title {
+    @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl;
+  }
+
+  .responsive-subtitle {
+    @apply text-lg sm:text-xl md:text-2xl;
+  }
+
+  .responsive-text {
+    @apply text-sm sm:text-base md:text-lg;
+  }
+
+  /* Mobile-first grid improvements */
+  .mobile-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-6;
+  }
+
+  .mobile-grid-2 {
+    @apply grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 md:gap-6;
+  }
+
+  .mobile-grid-3 {
+    @apply grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 sm:gap-3 md:gap-4;
+  }
+
+  /* Mobile spacing improvements */
+  .mobile-spacing {
+    @apply space-y-4 sm:space-y-6 md:space-y-8;
+  }
+
+  .mobile-padding {
+    @apply p-3 sm:p-4 md:p-6 lg:p-8;
+  }
+
+  .mobile-margin {
+    @apply m-3 sm:m-4 md:m-6 lg:m-8;
   }
 }
 
@@ -147,4 +227,102 @@
     min-height: 48px;
     min-width: 48px;
   }
+
+  /* Better mobile typography */
+  h1 {
+    @apply text-2xl sm:text-3xl;
+  }
+
+  h2 {
+    @apply text-xl sm:text-2xl;
+  }
+
+  h3 {
+    @apply text-lg sm:text-xl;
+  }
+
+  /* Mobile-specific adjustments */
+  .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  /* Improve mobile card layouts */
+  .mobile-card {
+    @apply rounded-2xl p-3 shadow-md;
+  }
+
+  /* Better mobile button spacing */
+  .mobile-button-group {
+    @apply flex flex-col sm:flex-row gap-2 sm:gap-4;
+  }
+
+  /* Mobile-friendly input fields */
+  input,
+  textarea,
+  select {
+    @apply text-base px-3 py-2 rounded-lg border-2;
+    min-height: 48px;
+  }
+
+  /* Mobile canvas improvements */
+  canvas {
+    max-width: 100%;
+    height: auto;
+    min-height: 250px;
+  }
+}
+
+/* Tablet specific improvements */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .tablet-grid {
+    @apply grid-cols-2 lg:grid-cols-3;
+  }
+
+  .tablet-spacing {
+    @apply space-y-6;
+  }
+}
+
+/* Large screen improvements */
+@media (min-width: 1024px) {
+  .desktop-grid {
+    @apply grid-cols-3 xl:grid-cols-4;
+  }
+
+  .desktop-spacing {
+    @apply space-y-8;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .game-card,
+  .game-button,
+  .kid-button {
+    transition: none;
+    transform: none;
+  }
+
+  .game-card:hover,
+  .game-button:hover,
+  .kid-button:hover {
+    transform: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .game-card {
+    border: 2px solid;
+  }
+
+  button {
+    border: 2px solid;
+  }
+}
+
+/* Dark mode support (if needed) */
+@media (prefers-color-scheme: dark) {
+  /* Add dark mode styles if needed */
 }

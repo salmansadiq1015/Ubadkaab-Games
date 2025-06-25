@@ -50,31 +50,13 @@ const translations = {
     correct: "Correct!",
     tryAgain: "Try Again",
     wellDone: "Well Done!",
+    time: "Time",
+    points: "points",
+    save: "Save",
+    clear: "Clear",
 
     // Alphabets
     clickLetter: "Click on a letter to hear its sound!",
-
-    // Math
-    addition: "Addition",
-    subtraction: "Subtraction",
-    multiplication: "Multiplication",
-
-    // Drawing
-    colors: "Colors",
-    brushSize: "Brush Size",
-    clear: "Clear",
-
-    // Quran
-    surah: "Surah",
-    verse: "Verse",
-    listen: "Listen",
-
-    // Profile
-    totalScore: "Total Score",
-    gamesPlayed: "Games Played",
-    favoriteGame: "Favorite Game",
-
-    // New translations
     learn: "Learn",
     letters: "letters",
     letterSoundsChallenge: "Letter Sounds Challenge",
@@ -98,6 +80,80 @@ const translations = {
     levelComplete: "Level Complete",
     amazingWork: "Amazing work on level",
     nextLevel: "Next Level",
+
+    // Drawing
+    freeDrawing: "Free Drawing",
+    drawAnything: "Draw anything you like!",
+    letCreativityFlow: "Let your creativity flow! Draw whatever makes you happy.",
+    letterPractice: "Letter Practice",
+    drawLetter: "Draw the letter",
+    practiceWriting: "Practice writing the letter",
+    makeItBig: "Make it big and colorful",
+    wordPractice: "Word Practice",
+    drawWord: "Draw the word",
+    writeWord: "Write the word",
+    inBeautifulLetters: "in beautiful letters",
+    shapeChallenge: "Shape Challenge",
+    drawA: "Draw a",
+    canYouDraw: "Can you draw a",
+    makeItColorful: "Make it colorful",
+    objectDrawing: "Object Drawing",
+    drawCreative: "Draw a creative",
+    addDetails: "Add details and colors to make it special",
+    patternChallenge: "Pattern Challenge",
+    createPattern: "Create a",
+    fillCanvas: "Fill the canvas with a",
+    usingColors: "using these specific colors",
+    storyIllustration: "Story Illustration",
+    illustrate: "Illustrate",
+    drawScene: "Draw a scene showing",
+    tellStory: "Tell a story with your art",
+    colors: "Colors",
+    brushSize: "Brush Size",
+    colorsUsed: "Colors Used",
+    strokes: "Strokes",
+    completeDrawing: "Complete Drawing",
+    useMouseOrTouch: "Use mouse or touch to draw",
+    artworkComplete: "Artwork Complete",
+    challenge: "Challenge",
+    totalStrokes: "Total Strokes",
+    finalScore: "Final Score",
+    saveArtwork: "Save Artwork",
+    nextChallenge: "Next Challenge",
+    greatArtwork: "Great artwork!",
+    perfectColorUsage: "Perfect color usage!",
+    excellentPractice: "Excellent practice!",
+    timeBonus: "Time bonus",
+    youEarned: "You earned",
+    bonusPoints: "bonus points",
+    hearLetter: "Hear Letter",
+    hearWord: "Hear Word",
+    requiredColors: "Required Colors",
+    used: "Used",
+
+    // Math
+    addition: "Addition",
+    subtraction: "Subtraction",
+    multiplication: "Multiplication",
+    division: "Division",
+
+    // Quran
+    surah: "Surah",
+    verse: "Verse",
+    listen: "Listen",
+
+    // Profile
+    totalScore: "Total Score",
+    gamesPlayed: "Games Played",
+    favoriteGame: "Favorite Game",
+
+    // Shapes
+    circle: "circle",
+    square: "square",
+    triangle: "triangle",
+    rectangle: "rectangle",
+    star: "star",
+    heart: "heart",
   },
   ar: {
     // Navigation
@@ -127,31 +183,13 @@ const translations = {
     correct: "صحيح!",
     tryAgain: "حاول مرة أخرى",
     wellDone: "أحسنت!",
+    time: "الوقت",
+    points: "نقاط",
+    save: "حفظ",
+    clear: "مسح",
 
     // Alphabets
     clickLetter: "انقر على حرف لسماع صوته!",
-
-    // Math
-    addition: "الجمع",
-    subtraction: "الطرح",
-    multiplication: "الضرب",
-
-    // Drawing
-    colors: "الألوان",
-    brushSize: "حجم الفرشاة",
-    clear: "مسح",
-
-    // Quran
-    surah: "سورة",
-    verse: "آية",
-    listen: "استمع",
-
-    // Profile
-    totalScore: "مجموع النقاط",
-    gamesPlayed: "الألعاب المُلعبة",
-    favoriteGame: "اللعبة المفضلة",
-
-    // New translations
     learn: "تعلم",
     letters: "حروف",
     letterSoundsChallenge: "تحدي أصوات الحروف",
@@ -175,6 +213,80 @@ const translations = {
     levelComplete: "المستوى مكتمل",
     amazingWork: "عمل رائع في المستوى",
     nextLevel: "المستوى التالي",
+
+    // Drawing
+    freeDrawing: "الرسم الحر",
+    drawAnything: "ارسم أي شيء تحبه!",
+    letCreativityFlow: "دع إبداعك يتدفق! ارسم ما يجعلك سعيداً.",
+    letterPractice: "تدريب الحروف",
+    drawLetter: "ارسم الحرف",
+    practiceWriting: "تدرب على كتابة الحرف",
+    makeItBig: "اجعله كبيراً وملوناً",
+    wordPractice: "تدريب الكلمات",
+    drawWord: "ارسم الكلمة",
+    writeWord: "اكتب الكلمة",
+    inBeautifulLetters: "بحروف جميلة",
+    shapeChallenge: "تحدي الأشكال",
+    drawA: "ارسم",
+    canYouDraw: "هل يمكنك رسم",
+    makeItColorful: "اجعله ملوناً",
+    objectDrawing: "رسم الأشياء",
+    drawCreative: "ارسم",
+    addDetails: "أضف التفاصيل والألوان لتجعله مميزاً",
+    patternChallenge: "تحدي الأنماط",
+    createPattern: "أنشئ نمط",
+    fillCanvas: "املأ اللوحة بنمط",
+    usingColors: "باستخدام هذه الألوان المحددة",
+    storyIllustration: "رسم القصص",
+    illustrate: "ارسم",
+    drawScene: "ارسم مشهداً يُظهر",
+    tellStory: "احك قصة بفنك",
+    colors: "الألوان",
+    brushSize: "حجم الفرشاة",
+    colorsUsed: "الألوان المستخدمة",
+    strokes: "الضربات",
+    completeDrawing: "أكمل الرسم",
+    useMouseOrTouch: "استخدم الماوس أو اللمس للرسم",
+    artworkComplete: "العمل الفني مكتمل",
+    challenge: "تحدي",
+    totalStrokes: "إجمالي الضربات",
+    finalScore: "النتيجة النهائية",
+    saveArtwork: "احفظ العمل الفني",
+    nextChallenge: "التحدي التالي",
+    greatArtwork: "عمل فني رائع!",
+    perfectColorUsage: "استخدام مثالي للألوان!",
+    excellentPractice: "تدريب ممتاز!",
+    timeBonus: "مكافأة الوقت",
+    youEarned: "لقد حصلت على",
+    bonusPoints: "نقاط إضافية",
+    hearLetter: "استمع للحرف",
+    hearWord: "استمع للكلمة",
+    requiredColors: "الألوان المطلوبة",
+    used: "مستخدم",
+
+    // Math
+    addition: "الجمع",
+    subtraction: "الطرح",
+    multiplication: "الضرب",
+    division: "القسمة",
+
+    // Quran
+    surah: "سورة",
+    verse: "آية",
+    listen: "استمع",
+
+    // Profile
+    totalScore: "مجموع النقاط",
+    gamesPlayed: "الألعاب المُلعبة",
+    favoriteGame: "اللعبة المفضلة",
+
+    // Shapes
+    circle: "دائرة",
+    square: "مربع",
+    triangle: "مثلث",
+    rectangle: "مستطيل",
+    star: "نجمة",
+    heart: "قلب",
   },
   so: {
     // Navigation
@@ -204,31 +316,13 @@ const translations = {
     correct: "Sax!",
     tryAgain: "Mar kale isku day",
     wellDone: "Si fiican!",
+    time: "Waqtiga",
+    points: "dhibco",
+    save: "Kaydi",
+    clear: "Nadiifi",
 
     // Alphabets
     clickLetter: "Riix xaraf si aad u maqasho codkiisa!",
-
-    // Math
-    addition: "Isku darka",
-    subtraction: "Ka goynta",
-    multiplication: "Isku dhufashada",
-
-    // Drawing
-    colors: "Midabada",
-    brushSize: "Cabbirka Brushka",
-    clear: "Nadiifi",
-
-    // Quran
-    surah: "Suurad",
-    verse: "Aayad",
-    listen: "Dhegayso",
-
-    // Profile
-    totalScore: "Wadarta Dhibcaha",
-    gamesPlayed: "Ciyaaraha la ciyaaray",
-    favoriteGame: "Ciyaarta la jecel yahay",
-
-    // New translations
     learn: "Baro",
     letters: "xarfo",
     letterSoundsChallenge: "Tartanka Codadka Xarfaha",
@@ -252,6 +346,80 @@ const translations = {
     levelComplete: "Heerka Dhamaaday",
     amazingWork: "Shaqo cajiib ah heerka",
     nextLevel: "Heerka Xiga",
+
+    // Drawing
+    freeDrawing: "Sawir Xor",
+    drawAnything: "Sawiir wax kasta oo aad jeceshahay!",
+    letCreativityFlow: "Ha daadato hal-abuurkaaga! Sawiir waxa ku farxiya.",
+    letterPractice: "Tababarka Xarfaha",
+    drawLetter: "Sawiir xarfka",
+    practiceWriting: "Ku celceli qorista xarfka",
+    makeItBig: "Ka dhig mid weyn oo midab leh",
+    wordPractice: "Tababarka Erayada",
+    drawWord: "Sawiir erayga",
+    writeWord: "Qor erayga",
+    inBeautifulLetters: "xarfo qurux badan",
+    shapeChallenge: "Tartanka Qaabka",
+    drawA: "Sawiir",
+    canYouDraw: "Ma sawiiri kartaa",
+    makeItColorful: "Ka dhig mid midab leh",
+    objectDrawing: "Sawirka Walxaha",
+    drawCreative: "Sawiir",
+    addDetails: "Ku dar faahfaahin iyo midabyo si aad uga dhigto mid gaar ah",
+    patternChallenge: "Tartanka Qaabka",
+    createPattern: "Samee qaab",
+    fillCanvas: "Buuxi sawirka qaab",
+    usingColors: "adoo isticmaalaya midabadan gaarka ah",
+    storyIllustration: "Sawirka Sheekooyinka",
+    illustrate: "Sawiir",
+    drawScene: "Sawiir muuqaal muujinaya",
+    tellStory: "Sheeg sheeko farshaxaadaada",
+    colors: "Midabada",
+    brushSize: "Cabbirka Brushka",
+    colorsUsed: "Midabada la isticmaalay",
+    strokes: "Xariiqaha",
+    completeDrawing: "Dhamaystir Sawirka",
+    useMouseOrTouch: "Isticmaal jiirka ama taabashada si aad u sawirto",
+    artworkComplete: "Farshaxanku Dhamaaday",
+    challenge: "Tartanka",
+    totalStrokes: "Wadarta Xariiqaha",
+    finalScore: "Natiijooyinka Dhammaadka",
+    saveArtwork: "Kaydi Farshaxanka",
+    nextChallenge: "Tartanka Xiga",
+    greatArtwork: "Farshaxan weyn!",
+    perfectColorUsage: "Isticmaal midab oo fiican!",
+    excellentPractice: "Tababar fiican!",
+    timeBonus: "Gunno waqti",
+    youEarned: "Waad kasabtay",
+    bonusPoints: "dhibco dheeraad ah",
+    hearLetter: "Maqal Xarfka",
+    hearWord: "Maqal Erayga",
+    requiredColors: "Midabada Loo Baahan Yahay",
+    used: "La isticmaalay",
+
+    // Math
+    addition: "Isku darka",
+    subtraction: "Ka goynta",
+    multiplication: "Isku dhufashada",
+    division: "U qaybinta",
+
+    // Quran
+    surah: "Suurad",
+    verse: "Aayad",
+    listen: "Dhegayso",
+
+    // Profile
+    totalScore: "Wadarta Dhibcaha",
+    gamesPlayed: "Ciyaaraha la ciyaaray",
+    favoriteGame: "Ciyaarta la jecel yahay",
+
+    // Shapes
+    circle: "goobo",
+    square: "afargees",
+    triangle: "saddexagal",
+    rectangle: "afargees dheer",
+    star: "xiddig",
+    heart: "wadne",
   },
 }
 

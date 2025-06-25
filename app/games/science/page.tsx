@@ -191,12 +191,12 @@ export default function ScienceGame() {
           </Link> */}
 
           <div className="flex items-center space-x-4">
-            <div className="bg-white rounded-md px-4 py-2 shadow-lg">
+            <div className="bg-white rounded-full px-4 py-2 shadow-lg">
               <span className="font-bold text-gray-800">
                 {t("score")}: {score}
               </span>
             </div>
-            <div className="bg-white rounded-md px-4 py-2 shadow-lg">
+            <div className="bg-white rounded-full px-4 py-2 shadow-lg">
               <span className="font-bold text-gray-800">
                 Experiments: {completedExperiments.size}/{experiments.length}
               </span>

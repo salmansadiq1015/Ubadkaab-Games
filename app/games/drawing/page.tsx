@@ -15,6 +15,7 @@ import {
   Palette,
   Target,
   Star,
+  Volume2,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -42,79 +43,28 @@ const colors = [
 const brushSizes = [2, 5, 10, 15, 20, 25, 30];
 
 interface DrawingChallenge {
-  type: "free" | "shape" | "object" | "pattern" | "color" | "story";
+  type:
+    | "free"
+    | "shape"
+    | "object"
+    | "pattern"
+    | "color"
+    | "story"
+    | "alphabet"
+    | "letter";
   title: string;
   description: string;
   prompt: string;
   targetColors?: string[];
   requiredShapes?: string[];
+  targetLetter?: string;
+  targetWord?: string;
   timeLimit?: number;
 }
 
-const drawingPrompts = {
-  objects: [
-    "house",
-    "tree",
-    "car",
-    "flower",
-    "sun",
-    "moon",
-    "star",
-    "cat",
-    "dog",
-    "fish",
-    "bird",
-    "butterfly",
-    "rainbow",
-    "cloud",
-    "mountain",
-    "ocean",
-    "castle",
-    "rocket",
-    "robot",
-    "dinosaur",
-    "pizza",
-    "cake",
-    "ice cream",
-    "balloon",
-    "kite",
-    "boat",
-  ],
-  patterns: [
-    "stripes",
-    "dots",
-    "zigzag",
-    "spirals",
-    "checkerboard",
-    "waves",
-    "hearts",
-    "stars",
-    "triangles",
-    "circles",
-    "squares",
-    "diamonds",
-    "flowers",
-    "leaves",
-  ],
-  stories: [
-    "a magical forest",
-    "underwater adventure",
-    "space journey",
-    "fairy tale castle",
-    "jungle safari",
-    "winter wonderland",
-    "summer beach",
-    "city skyline",
-    "farm scene",
-    "birthday party",
-    "playground fun",
-    "garden party",
-  ],
-};
-
 export default function DrawingGame() {
-  const { t } = useLanguage();
-  const { playSound, speakText } = useAudio();
+  const { t, language, alphabetData, isRTL } = useLanguage();
+  const { playSound, speakText, speakArabic } = useAudio();
   const { updateScore } = useUser();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
@@ -132,43 +82,256 @@ export default function DrawingGame() {
   const [usedColors, setUsedColors] = useState<Set<string>>(new Set());
   const [strokeCount, setStrokeCount] = useState(0);
 
+  // Language-specific drawing prompts
+  const getDrawingPrompts = () => {
+    const prompts = {
+      en: {
+        objects: [
+          "house",
+          "tree",
+          "car",
+          "flower",
+          "sun",
+          "moon",
+          "star",
+          "cat",
+          "dog",
+          "fish",
+          "bird",
+          "butterfly",
+          "rainbow",
+          "cloud",
+          "mountain",
+          "ocean",
+          "castle",
+          "rocket",
+          "robot",
+          "dinosaur",
+          "pizza",
+          "cake",
+          "ice cream",
+          "balloon",
+          "kite",
+          "boat",
+        ],
+        patterns: [
+          "stripes",
+          "dots",
+          "zigzag",
+          "spirals",
+          "checkerboard",
+          "waves",
+          "hearts",
+          "stars",
+          "triangles",
+          "circles",
+          "squares",
+          "diamonds",
+          "flowers",
+          "leaves",
+        ],
+        stories: [
+          "a magical forest",
+          "underwater adventure",
+          "space journey",
+          "fairy tale castle",
+          "jungle safari",
+          "winter wonderland",
+          "summer beach",
+          "city skyline",
+          "farm scene",
+          "birthday party",
+          "playground fun",
+          "garden party",
+        ],
+      },
+      ar: {
+        objects: [
+          "بيت",
+          "شجرة",
+          "سيارة",
+          "وردة",
+          "شمس",
+          "قمر",
+          "نجمة",
+          "قط",
+          "كلب",
+          "سمك",
+          "طائر",
+          "فراشة",
+          "قوس قزح",
+          "سحابة",
+          "جبل",
+          "بحر",
+          "قلعة",
+          "صاروخ",
+          "روبوت",
+          "ديناصور",
+          "بيتزا",
+          "كعكة",
+          "آيس كريم",
+          "بالون",
+          "طائرة ورقية",
+          "قارب",
+        ],
+        patterns: [
+          "خطوط",
+          "نقاط",
+          "متعرج",
+          "حلزونات",
+          "رقعة شطرنج",
+          "أمواج",
+          "قلوب",
+          "نجوم",
+          "مثلثات",
+          "دوائر",
+          "مربعات",
+          "معينات",
+          "زهور",
+          "أوراق",
+        ],
+        stories: [
+          "غابة سحرية",
+          "مغامرة تحت الماء",
+          "رحلة فضائية",
+          "قلعة خيالية",
+          "رحلة سفاري",
+          "عجائب الشتاء",
+          "شاطئ الصيف",
+          "أفق المدينة",
+          "مشهد المزرعة",
+          "حفلة عيد ميلاد",
+          "متعة الملعب",
+          "حفلة الحديقة",
+        ],
+      },
+      so: {
+        objects: [
+          "guri",
+          "geed",
+          "baabuur",
+          "ubax",
+          "qorax",
+          "dayax",
+          "xiddig",
+          "bisad",
+          "ey",
+          "kalluun",
+          "shimbir",
+          "balanbaalis",
+          "qaws-qorax",
+          "daruur",
+          "buur",
+          "bad",
+          "qalcad",
+          "gacmeed",
+          "robot",
+          "dinasoor",
+          "pizza",
+          "keeg",
+          "baraf macaan",
+          "buufin",
+          "shimbir waraq",
+          "doon",
+        ],
+        patterns: [
+          "xariiqo",
+          "dhibco",
+          "qallooc",
+          "wareeg",
+          "shatranj",
+          "hiraro",
+          "wadnaha",
+          "xiddigaha",
+          "saddexagal",
+          "goobo",
+          "afargees",
+          "dheeman",
+          "ubaxyo",
+          "caleemo",
+        ],
+        stories: [
+          "kayn sixir leh",
+          "tacab badda hoose",
+          "safar hawada sare",
+          "qalcad sheeko",
+          "safari kayn",
+          "yaab jiilaal",
+          "xeeb xagaa",
+          "magaalo muuqaal",
+          "beero meel",
+          "dabbaaldeg dhalasho",
+          "ciyaar meel",
+          "dabbaaldeg beero",
+        ],
+      },
+    };
+    return prompts[language] || prompts.en;
+  };
+
   const generateDrawingChallenge = (level: number): DrawingChallenge => {
+    const prompts = getDrawingPrompts();
+
     if (level <= 2) {
       return {
         type: "free",
-        title: "Free Drawing",
-        description: "Draw anything you like!",
-        prompt: "Let your creativity flow! Draw whatever makes you happy.",
+        title: t("freeDrawing"),
+        description: t("drawAnything"),
+        prompt: t("letCreativityFlow"),
       };
-    } else if (level <= 5) {
+    } else if (level <= 4) {
+      // Alphabet practice
+      const letters = alphabetData.letters;
+      const randomLetter = letters[Math.floor(Math.random() * letters.length)];
+      return {
+        type: "letter",
+        title: t("letterPractice"),
+        description: `${t("drawLetter")} ${randomLetter}`,
+        prompt: `${t("practiceWriting")} ${randomLetter}. ${t("makeItBig")}!`,
+        targetLetter: randomLetter,
+        timeLimit: 120,
+      };
+    } else if (level <= 6) {
+      // Word practice
+      const words = alphabetData.simpleWords;
+      const randomWord = words[Math.floor(Math.random() * words.length)];
+      return {
+        type: "alphabet",
+        title: t("wordPractice"),
+        description: `${t("drawWord")} "${randomWord}"`,
+        prompt: `${t("writeWord")} "${randomWord}" ${t("inBeautifulLetters")}!`,
+        targetWord: randomWord,
+        timeLimit: 180,
+      };
+    } else if (level <= 10) {
       const shapes = [
-        "circle",
-        "square",
-        "triangle",
-        "rectangle",
-        "star",
-        "heart",
+        t("circle"),
+        t("square"),
+        t("triangle"),
+        t("rectangle"),
+        t("star"),
+        t("heart"),
       ];
       const shape = shapes[Math.floor(Math.random() * shapes.length)];
       return {
         type: "shape",
-        title: "Shape Challenge",
-        description: `Draw a ${shape}`,
-        prompt: `Can you draw a beautiful ${shape}? Make it colorful!`,
+        title: t("shapeChallenge"),
+        description: `${t("drawA")} ${shape}`,
+        prompt: `${t("canYouDraw")} ${shape}? ${t("makeItColorful")}!`,
         requiredShapes: [shape],
       };
-    } else if (level <= 10) {
-      const objects = drawingPrompts.objects;
+    } else if (level <= 15) {
+      const objects = prompts.objects;
       const object = objects[Math.floor(Math.random() * objects.length)];
       return {
         type: "object",
-        title: "Object Drawing",
-        description: `Draw a ${object}`,
-        prompt: `Draw a creative ${object}! Add details and colors to make it special.`,
-        timeLimit: 180, // 3 minutes
+        title: t("objectDrawing"),
+        description: `${t("drawA")} ${object}`,
+        prompt: `${t("drawCreative")} ${object}! ${t("addDetails")}.`,
+        timeLimit: 240,
       };
-    } else if (level <= 15) {
-      const patterns = drawingPrompts.patterns;
+    } else if (level <= 20) {
+      const patterns = prompts.patterns;
       const pattern = patterns[Math.floor(Math.random() * patterns.length)];
       const colorCount = Math.min(3 + Math.floor(level / 3), 6);
       const challengeColors = colors
@@ -177,28 +340,14 @@ export default function DrawingGame() {
         .slice(0, colorCount);
       return {
         type: "pattern",
-        title: "Pattern Challenge",
-        description: `Create a ${pattern} pattern`,
-        prompt: `Fill the canvas with a ${pattern} pattern using these specific colors!`,
+        title: t("patternChallenge"),
+        description: `${t("createPattern")} ${pattern}`,
+        prompt: `${t("fillCanvas")} ${pattern} ${t("usingColors")}!`,
         targetColors: challengeColors,
-        timeLimit: 240, // 4 minutes
-      };
-    } else if (level <= 25) {
-      const colorCount = Math.min(4 + Math.floor(level / 5), 8);
-      const challengeColors = colors
-        .slice()
-        .sort(() => Math.random() - 0.5)
-        .slice(0, colorCount);
-      return {
-        type: "color",
-        title: "Color Mastery",
-        description: "Use all specified colors",
-        prompt: `Create a masterpiece using ALL of these colors! Be creative and make something beautiful.`,
-        targetColors: challengeColors,
-        timeLimit: 300, // 5 minutes
+        timeLimit: 300,
       };
     } else {
-      const stories = drawingPrompts.stories;
+      const stories = prompts.stories;
       const story = stories[Math.floor(Math.random() * stories.length)];
       const colorCount = Math.min(5 + Math.floor(level / 10), colors.length);
       const challengeColors = colors
@@ -207,11 +356,11 @@ export default function DrawingGame() {
         .slice(0, colorCount);
       return {
         type: "story",
-        title: "Story Illustration",
-        description: `Illustrate: ${story}`,
-        prompt: `Draw a scene showing ${story}. Tell a story with your art! Use lots of colors and details.`,
+        title: t("storyIllustration"),
+        description: `${t("illustrate")}: ${story}`,
+        prompt: `${t("drawScene")} ${story}. ${t("tellStory")}!`,
         targetColors: challengeColors,
-        timeLimit: 420, // 7 minutes
+        timeLimit: 420,
       };
     }
   };
@@ -223,18 +372,30 @@ export default function DrawingGame() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Set canvas size
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width;
-    canvas.height = rect.height;
+    const updateCanvasSize = () => {
+      const container = canvas.parentElement;
+      if (!container) return;
 
-    // Set initial canvas background
-    ctx.fillStyle = "white";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+      const containerWidth = container.clientWidth - 32; // Account for padding
+      const containerHeight = Math.min(
+        containerWidth * 0.6,
+        window.innerHeight * 0.4,
+        400
+      );
 
-    // Set drawing properties
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
+      canvas.width = containerWidth;
+      canvas.height = containerHeight;
+
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+    };
+
+    updateCanvasSize();
+    window.addEventListener("resize", updateCanvasSize);
+
+    return () => window.removeEventListener("resize", updateCanvasSize);
   }, []);
 
   useEffect(() => {
@@ -243,7 +404,7 @@ export default function DrawingGame() {
     setStrokeCount(0);
     setIsLevelComplete(false);
     clearCanvas();
-  }, [level]);
+  }, [level, language]);
 
   useEffect(() => {
     if (currentChallenge?.timeLimit && timeLeft === null) {
@@ -351,33 +512,36 @@ export default function DrawingGame() {
     if (!currentChallenge) return;
 
     let bonusScore = 0;
-    let feedback = "Great artwork! ";
+    let feedback = t("greatArtwork") + " ";
 
-    // Calculate bonus based on challenge completion
     if (currentChallenge.targetColors) {
-      const colorUsageRatio =
-        usedColors.size / currentChallenge.targetColors.length;
       const targetColorUsage = currentChallenge.targetColors.filter((color) =>
         usedColors.has(color)
       ).length;
       bonusScore += targetColorUsage * 20;
 
       if (targetColorUsage === currentChallenge.targetColors.length) {
-        feedback += "Perfect color usage! ";
+        feedback += t("perfectColorUsage") + " ";
         bonusScore += 50;
       }
     }
 
-    // Time bonus
+    if (
+      currentChallenge.type === "letter" ||
+      currentChallenge.type === "alphabet"
+    ) {
+      bonusScore += 30;
+      feedback += t("excellentPractice") + " ";
+    }
+
     if (timeLeft && currentChallenge.timeLimit) {
       const timeBonus = Math.floor(
         (timeLeft / currentChallenge.timeLimit) * 30
       );
       bonusScore += timeBonus;
-      feedback += `Time bonus: ${timeBonus} points! `;
+      feedback += `${t("timeBonus")}: ${timeBonus} ${t("points")}! `;
     }
 
-    // Creativity bonus based on strokes and colors
     const creativityBonus = Math.min(
       strokeCount * 2 + usedColors.size * 5,
       100
@@ -390,7 +554,16 @@ export default function DrawingGame() {
     playSound("correct");
 
     setTimeout(() => {
-      speakText(feedback + `You earned ${bonusScore} bonus points!`);
+      if (language === "ar") {
+        speakArabic(
+          feedback + `لقد حصلت على ${bonusScore} نقطة إضافية!`,
+          feedback + `You earned ${bonusScore} bonus points!`
+        );
+      } else {
+        speakText(
+          feedback + `${t("youEarned")} ${bonusScore} ${t("bonusPoints")}!`
+        );
+      }
     }, 500);
   };
 
@@ -433,93 +606,193 @@ export default function DrawingGame() {
     clearCanvas();
   };
 
+  const playLetterSound = () => {
+    if (!currentChallenge?.targetLetter) return;
+
+    if (language === "ar") {
+      speakArabic(currentChallenge.targetLetter, currentChallenge.targetLetter);
+    } else {
+      playSound("letter", currentChallenge.targetLetter);
+    }
+  };
+
+  const playWordSound = () => {
+    if (!currentChallenge?.targetWord) return;
+
+    if (language === "ar") {
+      speakArabic(currentChallenge.targetWord, currentChallenge.targetWord);
+    } else {
+      speakText(currentChallenge.targetWord, { rate: 0.7 });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-100 via-blue-50 to-purple-100">
       <Header />
 
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div
+          className={`flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4 ${
+            isRTL ? "sm:flex-row-reverse" : ""
+          }`}
+        >
           {/* <Link href="/">
             <Button variant="outline" className="bg-white text-gray-700 hover:bg-gray-100">
-              <ArrowLeft className="w-4 h-4 mr-2" />
+              <ArrowLeft className={`w-4 h-4 ${isRTL ? "ml-2 rotate-180" : "mr-2"}`} />
               {t("back")}
             </Button>
           </Link> */}
 
-          <div className="flex items-center space-x-4">
-            <div className="bg-white rounded-md px-4 py-2 shadow-lg">
-              <span className="font-bold text-gray-800">
+          <div
+            className={`flex flex-wrap items-center gap-2 sm:gap-4 ${
+              isRTL ? "sm:flex-row-reverse" : ""
+            }`}
+          >
+            <div className="bg-white rounded-full px-3 py-1 sm:px-4 sm:py-2 shadow-lg">
+              <span className="font-bold text-gray-800 text-sm sm:text-base">
                 {t("score")}: {score}
               </span>
             </div>
-            <div className="bg-white rounded-md px-4 py-2 shadow-lg">
-              <span className="font-bold text-gray-800">
+            <div className="bg-white rounded-full px-3 py-1 sm:px-4 sm:py-2 shadow-lg">
+              <span className="font-bold text-gray-800 text-sm sm:text-base">
                 {t("level")}: {level}
               </span>
             </div>
             {timeLeft !== null && (
               <div
-                className={`rounded-full px-4 py-2 shadow-lg ${
+                className={`rounded-full px-3 py-1 sm:px-4 sm:py-2 shadow-lg text-sm sm:text-base ${
                   timeLeft <= 30
                     ? "bg-red-100 text-red-800"
                     : "bg-white text-gray-800"
                 }`}
               >
                 <span className="font-bold">
-                  Time: {Math.floor(timeLeft / 60)}:
+                  {t("time")}: {Math.floor(timeLeft / 60)}:
                   {(timeLeft % 60).toString().padStart(2, "0")}
                 </span>
               </div>
             )}
-            <Button
-              onClick={clearCanvas}
-              variant="outline"
-              className="bg-white text-gray-700 hover:bg-gray-100"
-            >
-              <RotateCcw className="w-4 h-4 mr-2" />
-              {t("clear")}
-            </Button>
-            <Button
-              onClick={downloadDrawing}
-              variant="outline"
-              className="bg-white text-gray-700 hover:bg-gray-100"
-            >
-              <Download className="w-4 h-4 mr-2" />
-              Save
-            </Button>
-            <Button
-              onClick={handleRestart}
-              variant="outline"
-              className="bg-white text-gray-700 hover:bg-gray-100"
-            >
-              <RotateCcw className="w-4 h-4 mr-2" />
-              {t("restart")}
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                onClick={clearCanvas}
+                variant="outline"
+                size="sm"
+                className="bg-white text-gray-700 hover:bg-gray-100"
+              >
+                <RotateCcw
+                  className={`w-4 h-4 ${isRTL ? "ml-1" : "mr-1"} sm:mr-2`}
+                />
+                <span className="hidden sm:inline">{t("clear")}</span>
+              </Button>
+              <Button
+                onClick={downloadDrawing}
+                variant="outline"
+                size="sm"
+                className="bg-white text-gray-700 hover:bg-gray-100"
+              >
+                <Download
+                  className={`w-4 h-4 ${isRTL ? "ml-1" : "mr-1"} sm:mr-2`}
+                />
+                <span className="hidden sm:inline">{t("save")}</span>
+              </Button>
+              <Button
+                onClick={handleRestart}
+                variant="outline"
+                size="sm"
+                className="bg-white text-gray-700 hover:bg-gray-100"
+              >
+                <RotateCcw
+                  className={`w-4 h-4 ${isRTL ? "ml-1" : "mr-1"} sm:mr-2`}
+                />
+                <span className="hidden sm:inline">{t("restart")}</span>
+              </Button>
+            </div>
           </div>
         </div>
 
         {/* Title */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent mb-4">
+        <div className="text-center mb-6 sm:mb-8">
+          <h1 className="responsive-title font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent mb-4">
             🎨 {t("drawing")} 🎨
           </h1>
           {currentChallenge && (
-            <div className="bg-white rounded-xl p-4 shadow-lg max-w-2xl mx-auto">
-              <h2 className="text-xl font-bold text-gray-800 mb-2">
+            <div className="bg-white rounded-xl p-4 sm:p-6 shadow-lg max-w-2xl mx-auto">
+              <h2
+                className={`text-lg sm:text-xl font-bold text-gray-800 mb-2 ${
+                  language === "ar" ? "font-arabic" : ""
+                }`}
+              >
                 {currentChallenge.title}
               </h2>
-              <p className="text-gray-600 mb-2">
+              <p
+                className={`text-gray-600 mb-2 text-sm sm:text-base ${
+                  language === "ar" ? "font-arabic" : ""
+                }`}
+              >
                 {currentChallenge.description}
               </p>
-              <p className="text-sm text-gray-500 italic">
+              <p
+                className={`text-xs sm:text-sm text-gray-500 italic ${
+                  language === "ar" ? "font-arabic" : ""
+                }`}
+              >
                 {currentChallenge.prompt}
               </p>
+
+              {/* Letter/Word Practice Audio */}
+              {(currentChallenge.type === "letter" ||
+                currentChallenge.type === "alphabet") && (
+                <div className="mt-4 flex flex-col sm:flex-row justify-center items-center gap-4">
+                  {currentChallenge.targetLetter && (
+                    <div className="text-center">
+                      <div
+                        className={`text-4xl sm:text-6xl font-bold text-blue-600 mb-2 ${
+                          language === "ar" ? "font-arabic" : ""
+                        }`}
+                      >
+                        {currentChallenge.targetLetter}
+                      </div>
+                      <Button
+                        onClick={playLetterSound}
+                        size="sm"
+                        className="bg-blue-500 hover:bg-blue-600 text-white"
+                      >
+                        <Volume2
+                          className={`w-4 h-4 ${isRTL ? "ml-2" : "mr-2"}`}
+                        />
+                        {t("hearLetter")}
+                      </Button>
+                    </div>
+                  )}
+                  {currentChallenge.targetWord && (
+                    <div className="text-center">
+                      <div
+                        className={`text-2xl sm:text-3xl font-bold text-green-600 mb-2 ${
+                          language === "ar" ? "font-arabic" : ""
+                        }`}
+                      >
+                        {currentChallenge.targetWord}
+                      </div>
+                      <Button
+                        onClick={playWordSound}
+                        size="sm"
+                        className="bg-green-500 hover:bg-green-600 text-white"
+                      >
+                        <Volume2
+                          className={`w-4 h-4 ${isRTL ? "ml-2" : "mr-2"}`}
+                        />
+                        {t("hearWord")}
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {currentChallenge.targetColors && (
                 <div className="mt-3">
                   <p className="text-sm font-bold text-gray-700 mb-2">
-                    Required Colors:
+                    {t("requiredColors")}:
                   </p>
                   <div className="flex justify-center space-x-2">
                     {currentChallenge.targetColors.map((color, index) => (
@@ -539,7 +812,7 @@ export default function DrawingGame() {
                     ))}
                   </div>
                   <p className="text-xs text-gray-500 mt-1">
-                    Used:{" "}
+                    {t("used")}:{" "}
                     {
                       currentChallenge.targetColors.filter((color) =>
                         usedColors.has(color)
@@ -554,22 +827,34 @@ export default function DrawingGame() {
         </div>
 
         {!isLevelComplete ? (
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div
+            className={`grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6 ${
+              isRTL ? "lg:grid-cols-4" : ""
+            }`}
+          >
             {/* Tools Panel */}
-            <div className="lg:col-span-1">
+            <div
+              className={`lg:col-span-1 order-2 lg:order-1 ${
+                isRTL ? "lg:order-2" : ""
+              }`}
+            >
               <Card className="bg-white shadow-lg">
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-bold mb-4 flex items-center">
-                    <Palette className="w-5 h-5 mr-2" />
+                <CardContent className="p-4 sm:p-6">
+                  <h3
+                    className={`text-lg sm:text-xl font-bold mb-4 flex items-center ${
+                      isRTL ? "flex-row-reverse" : ""
+                    }`}
+                  >
+                    <Palette className={`w-5 h-5 ${isRTL ? "ml-2" : "mr-2"}`} />
                     {t("colors")}
                   </h3>
 
                   {/* Color Palette */}
-                  <div className="grid grid-cols-3 gap-2 mb-6">
+                  <div className="grid grid-cols-6 sm:grid-cols-3 gap-2 mb-6">
                     {colors.map((color) => (
                       <button
                         key={color}
-                        className={`w-12 h-12 rounded-full border-4 transition-all duration-300 hover:scale-110 active:scale-95 ${
+                        className={`w-8 h-8 sm:w-12 sm:h-12 rounded-full border-4 transition-all duration-300 hover:scale-110 active:scale-95 ${
                           currentColor === color
                             ? "border-gray-800 scale-110"
                             : "border-gray-300"
@@ -587,7 +872,9 @@ export default function DrawingGame() {
                   </div>
 
                   {/* Brush Size */}
-                  <h4 className="text-lg font-bold mb-3">{t("brushSize")}</h4>
+                  <h4 className="text-base sm:text-lg font-bold mb-3">
+                    {t("brushSize")}
+                  </h4>
                   <div className="space-y-2">
                     {brushSizes.map((size) => (
                       <button
@@ -605,7 +892,10 @@ export default function DrawingGame() {
                       >
                         <div
                           className="mx-auto rounded-full bg-gray-800"
-                          style={{ width: size * 2, height: size * 2 }}
+                          style={{
+                            width: Math.max(size * 1.5, 8),
+                            height: Math.max(size * 1.5, 8),
+                          }}
                         />
                       </button>
                     ))}
@@ -614,10 +904,10 @@ export default function DrawingGame() {
                   {/* Stats */}
                   <div className="mt-6 p-3 bg-gray-50 rounded-lg">
                     <p className="text-sm text-gray-600">
-                      Colors Used: {usedColors.size}
+                      {t("colorsUsed")}: {usedColors.size}
                     </p>
                     <p className="text-sm text-gray-600">
-                      Strokes: {strokeCount}
+                      {t("strokes")}: {strokeCount}
                     </p>
                   </div>
 
@@ -627,20 +917,28 @@ export default function DrawingGame() {
                     className="w-full mt-4 bg-green-500 hover:bg-green-600 text-white"
                     disabled={strokeCount < 5}
                   >
-                    Complete Drawing
+                    {t("completeDrawing")}
                   </Button>
                 </CardContent>
               </Card>
             </div>
 
             {/* Canvas */}
-            <div className="lg:col-span-3">
+            <div
+              className={`lg:col-span-3 order-1 lg:order-2 ${
+                isRTL ? "lg:order-1" : ""
+              }`}
+            >
               <Card className="bg-white shadow-lg">
-                <CardContent className="p-6">
+                <CardContent className="p-4 sm:p-6">
                   <canvas
                     ref={canvasRef}
-                    className="w-full h-96 border-2 border-gray-300 rounded-lg cursor-crosshair touch-none"
-                    style={{ touchAction: "none" }}
+                    className="w-full border-2 border-gray-300 rounded-lg cursor-crosshair touch-none"
+                    style={{
+                      touchAction: "none",
+                      minHeight: "250px",
+                      maxHeight: "400px",
+                    }}
                     onMouseDown={startDrawing}
                     onMouseMove={draw}
                     onMouseUp={stopDrawing}
@@ -650,8 +948,8 @@ export default function DrawingGame() {
                     onTouchEnd={stopDrawing}
                     onTouchCancel={stopDrawing}
                   />
-                  <p className="text-sm text-gray-500 mt-2 text-center">
-                    🖱️ Use mouse or 👆 touch to draw!
+                  <p className="text-xs sm:text-sm text-gray-500 mt-2 text-center">
+                    🖱️ {t("useMouseOrTouch")}!
                   </p>
                 </CardContent>
               </Card>
@@ -661,30 +959,42 @@ export default function DrawingGame() {
           /* Level Complete */
           <div className="text-center">
             <Card className="bg-white shadow-2xl max-w-2xl mx-auto">
-              <CardContent className="p-8">
-                <h2 className="text-4xl font-bold text-green-600 mb-4">
-                  🎨 Artwork Complete! 🎨
+              <CardContent className="p-6 sm:p-8">
+                <h2 className="text-2xl sm:text-4xl font-bold text-green-600 mb-4">
+                  🎨 {t("artworkComplete")}! 🎨
                 </h2>
-                <div className="space-y-2 text-lg text-gray-700 mb-6">
-                  <p>
-                    Level {level} Challenge: {currentChallenge?.title}
+                <div className="space-y-2 text-base sm:text-lg text-gray-700 mb-6">
+                  <p className={language === "ar" ? "font-arabic" : ""}>
+                    {t("level")} {level} {t("challenge")}:{" "}
+                    {currentChallenge?.title}
                   </p>
-                  <p>Colors Used: {usedColors.size}</p>
-                  <p>Total Strokes: {strokeCount}</p>
-                  <p>Final Score: {score} points</p>
+                  <p>
+                    {t("colorsUsed")}: {usedColors.size}
+                  </p>
+                  <p>
+                    {t("totalStrokes")}: {strokeCount}
+                  </p>
+                  <p>
+                    {t("finalScore")}: {score} {t("points")}
+                  </p>
                 </div>
-                <div className="space-x-4">
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Button
                     onClick={downloadDrawing}
                     variant="outline"
-                    className="mb-4"
+                    className="w-full sm:w-auto"
                   >
-                    <Download className="w-4 h-4 mr-2" />
-                    Save Artwork
+                    <Download
+                      className={`w-4 h-4 ${isRTL ? "ml-2" : "mr-2"}`}
+                    />
+                    {t("saveArtwork")}
                   </Button>
-                  <Button onClick={handleNextLevel} className="kid-button">
-                    <Target className="w-4 h-4 mr-2" />
-                    Next Challenge
+                  <Button
+                    onClick={handleNextLevel}
+                    className="kid-button w-full sm:w-auto"
+                  >
+                    <Target className={`w-4 h-4 ${isRTL ? "ml-2" : "mr-2"}`} />
+                    {t("nextChallenge")}
                   </Button>
                 </div>
               </CardContent>

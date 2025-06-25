@@ -69,37 +69,39 @@ export default function HomePage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100">
       <Header />
 
-      <main className="container mx-auto px-4 py-8">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
+      <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-8">
+        <div className="text-center mb-8 sm:mb-12">
+          <h1 className="responsive-title font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
             🌟 {t("games")} 🌟
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">Choose your favorite learning adventure!</p>
+          <p className="responsive-subtitle text-gray-600 max-w-2xl mx-auto px-4">
+            Choose your favorite learning adventure!
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+        <div className="mobile-grid max-w-7xl mx-auto">
           {gameCategories.map((category) => {
             const Icon = category.icon
             return (
               <Link key={category.id} href={category.href} onClick={handleGameClick} className="game-card group">
                 <div
-                  className={`w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-r ${category.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}
+                  className={`w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 mx-auto mb-3 sm:mb-4 rounded-full bg-gradient-to-r ${category.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}
                 >
-                  <Icon className="w-10 h-10 text-white" />
+                  <Icon className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 text-white" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-800 mb-2 text-center">{t(category.id)}</h3>
+                <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2 text-center px-2">{t(category.id)}</h3>
                 <div className="text-center">
-                  <span className="kid-button inline-block">{t("play")}</span>
+                  <span className="kid-button inline-block text-sm sm:text-base">{t("play")}</span>
                 </div>
               </Link>
             )
           })}
         </div>
 
-        <div className="mt-16 text-center">
-          <div className="bg-white rounded-3xl shadow-lg p-8 max-w-2xl mx-auto">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">🎯 Learning Made Fun!</h2>
-            <p className="text-gray-600 text-lg">
+        <div className="mt-12 sm:mt-16 text-center">
+          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-lg p-6 sm:p-8 max-w-2xl mx-auto">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">🎯 Learning Made Fun!</h2>
+            <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
               Explore interactive games, learn new skills, and have amazing adventures while discovering the world
               around you!
             </p>
